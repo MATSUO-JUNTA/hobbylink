@@ -17,7 +17,7 @@ gem 'ostruct'
 
 gem 'rack-cors'
 
-gem "config"
+gem 'config'
 
 group :development, :test do
   gem 'pry-byebug'
