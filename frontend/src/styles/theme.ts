@@ -1,18 +1,11 @@
 'use client'
 
-import { red } from '@mui/material/colors'
-import { createTheme } from '@mui/material/styles'
+import { createTheme } from '@mui/material'
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#3EA8FF',
-    },
-    secondary: {
-      main: '#19857b',
-    },
-    error: {
-      main: red.A400,
+      main: '#1E90FF',
     },
     background: {
       default: '#F7F7F7',
