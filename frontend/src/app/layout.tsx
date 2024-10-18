@@ -5,6 +5,7 @@ import type { Metadata } from 'next'
 import Footer from './components/Footer'
 import Header from './components/Header'
 import theme from '@/styles/theme'
+import '@/styles/destyle.css'
 
 export const metadata: Metadata = {
   title: 'Hobby Link',
