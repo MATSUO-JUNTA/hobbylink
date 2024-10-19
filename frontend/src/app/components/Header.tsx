@@ -1,9 +1,17 @@
+'use client'
+
 import LoginIcon from '@mui/icons-material/Login'
 import { AppBar, Box, Button, Toolbar } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useState } from 'react'
+import LoginModal from './LoginModal'
 
 const Header = () => {
+  const [open, setOpen] = useState<boolean>(false)
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
+
   return (
     <Box>
       <AppBar
@@ -28,9 +36,11 @@ const Header = () => {
               fontSize: 9,
               fontWeight: 'bold',
             }}
+            onClick={handleOpen}
           >
             ログイン
           </Button>
+          <LoginModal open={open} handleClose={handleClose} />
         </Toolbar>
       </AppBar>
     </Box>
