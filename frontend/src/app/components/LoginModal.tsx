@@ -2,6 +2,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import { Box, Button, IconButton, Modal, Typography } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
+import { signIn } from 'next-auth/react'
 
 type LoginModalProps = {
   open: boolean
@@ -55,6 +56,7 @@ const LoginModal = ({ open, handleClose }: LoginModalProps) => {
             ':hover': { backgroundColor: '#f0f0f0' },
           }}
           disableRipple
+          onClick={() => signIn('google')}
         >
           <Image src="/google.png" alt="google" width={20} height={20} />
           <Typography
