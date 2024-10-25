@@ -1,1 +1,6 @@
 frontend_url: <%= ENV['FRONTEND_URL'] %>
+aws_access_key_id: <%= ENV['AWS_ACCESS_KEY'] %>
+aws_secret_access_key: <%= ENV['AWS_SECRET_KEY'] %>
+aws_region: <%= ENV['AWS_REGION'] %>
+aws_bucket: <%= ENV['AWS_BUCKET'] %>
+jwt_secret_key: <%= ENV['JWT_SECRET_KEY'] %>

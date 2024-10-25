@@ -19,6 +19,14 @@ gem 'rack-cors'
 
 gem 'config'
 
+gem 'aws-sdk-s3'
+
+gem 'active_model_serializers'
+
+gem 'jwt'
+
+gem 'annotate'
+
 group :development, :test do
   gem 'pry-byebug'
   gem 'pry-doc'
