@@ -12,7 +12,9 @@
 #
 # Indexes
 #
+#  index_users_on_email               (email) UNIQUE
 #  index_users_on_email_and_provider  (email,provider) UNIQUE
+#  index_users_on_provider            (provider) UNIQUE
 #
 class User < ApplicationRecord
   validates :name,      presence: true

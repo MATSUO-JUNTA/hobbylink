@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_21_151422) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_25_110609) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -50,6 +50,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_21_151422) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email", "provider"], name: "index_users_on_email_and_provider", unique: true
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["provider"], name: "index_users_on_provider", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
