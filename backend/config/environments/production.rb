@@ -83,6 +83,8 @@ Rails.application.configure do
   config.hosts << "hobbylink.vercel.app"
   config.hosts << "hobbylink-66d327f4790b.herokuapp.com"
 
+  Rails.application.routes.default_url_options[:host] = "hobbylink-66d327f4790b.herokuapp.com"
+
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [
   #   "example.com",     # Allow requests from example.com
