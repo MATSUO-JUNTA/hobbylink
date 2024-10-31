@@ -8,6 +8,7 @@ AllCops:
     - 'config/**/*'
     - 'bin/*'
     - 'node_modules/**/*'
+    - 'lib/tasks/auto_annotate_models.rake'
 
   # 新ルールを有効化
   NewCops: enable

@@ -13,6 +13,7 @@ declare module 'next-auth' {
       email: string
       image: string
       bio: string
+      token: string
     }
   }
 
@@ -23,6 +24,7 @@ declare module 'next-auth' {
     email: string
     image: string
     bio: string
+    token: string
   }
 }
 
@@ -34,6 +36,7 @@ declare module 'next-auth/jwt' {
     email: string
     image: string
     bio: string
+    token: string
   }
 }
 
@@ -50,12 +53,22 @@ const authOptions: NextAuthOptions = {
       if (!account) return false
 
       try {
-        const res = await axios.post(signInUrl(account.provider), {
-          name: user.name,
-          email: user.email,
-          image: user.image,
-          provider: account.provider,
-        })
+        const res = await axios.post(
+          signInUrl(account.provider),
+          {
+            user: {
+              name: user.name,
+              email: user.email,
+              image: user.image,
+              provider: account.provider,
+            },
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        )
 
         if (res.status === 200) {
           // APIから取得したデータでユーザー情報を更新
@@ -64,6 +77,7 @@ const authOptions: NextAuthOptions = {
           user.email = res.data.email
           user.image = res.data.image
           user.bio = res.data.bio
+          user.token = res.data.token
           return true
         } else {
           return false

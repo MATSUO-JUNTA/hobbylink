@@ -1,11 +1,13 @@
 'use client'
 
+import { useSession } from 'next-auth/react'
 import useSWR from 'swr'
 import { fetcher } from '@/utils/fetcher'
+import { apiCheckUrl } from '@/utils/urls'
 
 const Home = () => {
-  const url = process.env.NEXT_PUBLIC_API_URL + '/api_check'
-  const { data, error } = useSWR(url, fetcher)
+  const { data, error } = useSWR(apiCheckUrl, fetcher)
+  const { data: session } = useSession()
 
   if (error) return <div>An error has occurred.</div>
   if (!data) return <div>Loading...</div>
@@ -13,6 +15,13 @@ const Home = () => {
   return (
     <>
       <div>{data.message}</div>
+      <div>
+        {session && session.user && (
+          <div>
+            <p>Image: {session.user.image}</p>
+          </div>
+        )}
+      </div>
     </>
   )
 }
