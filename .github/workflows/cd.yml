@@ -22,3 +22,10 @@ jobs:
           dockerfile_name: Dockerfile
           docker_options: '--no-cache'
           process_type: web
+
+      - name: Run db:migrate
+        run: |
+          heroku run rails db:create --app ${{ secrets.HEROKU_APP_NAME }} || true
+          heroku run rails db:migrate --app ${{ secrets.HEROKU_APP_NAME }}
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
