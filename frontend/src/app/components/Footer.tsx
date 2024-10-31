@@ -6,15 +6,29 @@ import NotificationsIcon from '@mui/icons-material/Notifications'
 import PersonIcon from '@mui/icons-material/Person'
 import SearchIcon from '@mui/icons-material/Search'
 import {
-  Box,
   BottomNavigation,
   BottomNavigationAction,
+  Box,
   Typography,
 } from '@mui/material'
-import { useState } from 'react'
+import { useRouter, usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
+
+const getInitValue = (pathname: string) => {
+  if (pathname === '/') return 0
+  if (pathname.startsWith('/search')) return 1
+  if (pathname.startsWith('/posts')) return 2
+  if (pathname.startsWith('/notifications')) return 3
+  if (pathname.startsWith('/mypage')) return 4
+  return 0
+}
 
 const Footer = () => {
-  const [value, setValue] = useState(0)
+  const router = useRouter()
+  const pathname = usePathname()
+  const [value, setValue] = useState(getInitValue(pathname))
+
+  useEffect(() => setValue(getInitValue(pathname)), [pathname])
 
   return (
     <Box
@@ -30,7 +44,23 @@ const Footer = () => {
         showLabels
         value={value}
         onChange={(event, newValue) => {
-          setValue(newValue)
+          switch (newValue) {
+            case 0:
+              router.push('/')
+              break
+            case 1:
+              router.push('/search')
+              break
+            case 2:
+              router.push('/posts')
+              break
+            case 3:
+              router.push('/notifications')
+              break
+            case 4:
+              router.push('/my-page')
+              break
+          }
         }}
       >
         <BottomNavigationAction
