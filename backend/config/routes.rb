@@ -4,6 +4,11 @@ Rails.application.routes.draw do
       post "auth/:provider/callback", to: "users#create"
       get "api_check", to: "api_check#index"
       resources :categories, only: [:index]
+      resources :products, only: [:show] do
+        collection do
+          get "search"
+        end
+      end
     end
   end
 end

@@ -4,3 +4,5 @@ aws_secret_access_key: <%= ENV['AWS_SECRET_KEY'] %>
 aws_region: <%= ENV['AWS_REGION'] %>
 aws_bucket: <%= ENV['AWS_BUCKET'] %>
 jwt_secret_key: <%= ENV['JWT_SECRET_KEY'] %>
+application_id: <%= ENV['APPLICATION_ID'] %>
+affiliate_id: <%= ENV['AFFILIATE_ID'] %>
