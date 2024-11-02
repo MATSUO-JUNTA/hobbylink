@@ -80,6 +80,11 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
+  config.hosts << "hobbylink.vercel.app"
+  config.hosts << "hobbylink-66d327f4790b.herokuapp.com"
+
+  Rails.application.routes.default_url_options[:host] = "hobbylink-66d327f4790b.herokuapp.com"
+  
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [
   #   "example.com",     # Allow requests from example.com
