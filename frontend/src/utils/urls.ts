@@ -5,3 +5,5 @@ export const apiCheckUrl = `${HOST_API_URL}/api_check`
 
 export const signInUrl = (provider: string) =>
   `${DOCKER_API_URL}/auth/${provider}/callback`
+
+export const categoriesUrl = `${HOST_API_URL}/categories`
