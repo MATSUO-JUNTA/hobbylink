@@ -27,6 +27,8 @@ gem 'jwt'
 
 gem 'annotate'
 
+gem 'rakuten_web_service'
+
 group :development, :test do
   gem 'pry-byebug'
   gem 'pry-doc'
