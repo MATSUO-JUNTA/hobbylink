@@ -5,21 +5,22 @@ import HomeIcon from '@mui/icons-material/Home'
 import NotificationsIcon from '@mui/icons-material/Notifications'
 import PersonIcon from '@mui/icons-material/Person'
 import SearchIcon from '@mui/icons-material/Search'
-import {
-  BottomNavigation,
-  BottomNavigationAction,
-  Box,
-  Typography,
-} from '@mui/material'
+import BottomNavigation from '@mui/material/BottomNavigation'
+import BottomNavigationAction from '@mui/material/BottomNavigationAction'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import { useRouter, usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useSession } from 'next-auth/react'
+import { useEffect, useState, useContext } from 'react'
+import LoginModal from './LoginModal'
+import { ProductContext } from '@/contexts/ProductContext'
 
 const getInitValue = (pathname: string) => {
   if (pathname === '/') return 0
   if (pathname.startsWith('/search')) return 1
   if (pathname.startsWith('/posts')) return 2
   if (pathname.startsWith('/notifications')) return 3
-  if (pathname.startsWith('/mypage')) return 4
+  if (pathname.startsWith('/my-page')) return 4
   return 0
 }
 
@@ -27,8 +28,21 @@ const Footer = () => {
   const router = useRouter()
   const pathname = usePathname()
   const [value, setValue] = useState(getInitValue(pathname))
+  const { resetFormData } = useContext(ProductContext)
+  const [open, setOpen] = useState<boolean>(false)
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
+  const { data: session } = useSession()
 
   useEffect(() => setValue(getInitValue(pathname)), [pathname])
+
+  const checkUserLogin = (path: string) => {
+    if (session?.user) {
+      router.push(path)
+    } else {
+      handleOpen()
+    }
+  }
 
   return (
     <Box
@@ -44,6 +58,8 @@ const Footer = () => {
         showLabels
         value={value}
         onChange={(event, newValue) => {
+          if (newValue !== 2) resetFormData()
+
           switch (newValue) {
             case 0:
               router.push('/')
@@ -52,13 +68,13 @@ const Footer = () => {
               router.push('/search')
               break
             case 2:
-              router.push('/posts')
+              checkUserLogin('/posts')
               break
             case 3:
-              router.push('/notifications')
+              checkUserLogin('/notifications')
               break
             case 4:
-              router.push('/my-page')
+              checkUserLogin('/my-page')
               break
           }
         }}
@@ -89,6 +105,7 @@ const Footer = () => {
           disableRipple
         />
       </BottomNavigation>
+      <LoginModal open={open} handleClose={handleClose} />
     </Box>
   )
 }

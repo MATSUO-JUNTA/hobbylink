@@ -14,32 +14,25 @@ import {
   OutlinedInput,
   Container,
 } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import { styled } from '@mui/material/styles'
+import axios from 'axios'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
+import { useContext, useEffect, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import useSWR from 'swr'
 import { z } from 'zod'
 import Error from '../components/Error'
 import Loading from '../components/Loading'
+import ProductCard from '../components/ProductCard'
 import ValidationMessage from '../components/ValidationMessage'
+import { NotificationContext } from '@/contexts/NotificationContext'
+import { ProductContext, Form } from '@/contexts/ProductContext'
 import { fetcher } from '@/utils/fetcher'
-import { categoriesUrl } from '@/utils/urls'
-
-type product = {
-  id: number
-  name: string
-  price: string
-  image: string
-}
-
-type PostForm = {
-  image: File
-  content: string
-  category: string
-  products: product[]
-}
+import { categoriesUrl, createPostUrl } from '@/utils/urls'
 
 type categoryProps = {
   id: string
@@ -69,7 +62,12 @@ const MenuProps = {
 }
 
 const Posts = () => {
+  const [isLoading, setIsLoading] = useState(false)
+  const { formData, setField, resetFormData } = useContext(ProductContext)
   const router = useRouter()
+  const { setNotification } = useContext(NotificationContext)
+  const { data: session } = useSession()
+
   const schema = z.object({
     image: z.custom<File>().refine((file) => file && file.size > 0, {
       message: '画像をアップロードしてください。',
@@ -82,10 +80,12 @@ const Posts = () => {
     products: z
       .array(
         z.object({
-          id: z.number(),
-          name: z.string(),
-          price: z.string(),
-          image: z.string(),
+          itemCode: z.string(),
+          itemName: z.string(),
+          itemCaption: z.string(),
+          itemPrice: z.number(),
+          mediumImageUrls: z.string(),
+          itemUrl: z.string(),
         }),
       )
       .max(10, 'おすすめ商品は10個まで選択可能です。'),
@@ -94,35 +94,65 @@ const Posts = () => {
   const {
     handleSubmit,
     control,
-    formState: { errors },
-  } = useForm<PostForm>({
-    defaultValues: {
-      image: undefined,
-      content: '',
-      category: '',
-      products: [],
-    },
+    setValue,
+    trigger,
+    formState: { errors, isSubmitted },
+  } = useForm<Form>({
+    defaultValues: formData,
     resolver: zodResolver(schema),
   })
 
-  const onSubmit = (data: PostForm) => {
-    console.log(data)
-    // const postUrl = 'http://localhost:3000/api/v1/posts/create'
-    // axios
-    //   .post(postUrl, data, {
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       'auth-token': 'token',
-    //     },
-    //   })
-    //   .then(() => {
-    //     console.log('成功')
-    //   })
-    //   .catch((err) => {
-    //     console.log(err)
-    //   })
+  useEffect(() => {
+    setValue('products', formData.products)
+    trigger('products')
+  }, [formData, setValue, trigger])
 
-    router.push('/')
+  const onSubmit = (data: Form) => {
+    // ローディング開始
+    setIsLoading(true)
+
+    const formData = new FormData()
+
+    if (data.image) {
+      formData.append('image', data.image)
+    }
+    formData.append('content', data.content)
+    formData.append('category', data.category)
+    data.products.forEach((product) =>
+      formData.append('products', JSON.stringify(product)),
+    )
+
+    axios
+      .post(createPostUrl, formData, {
+        headers: {
+          'Content-Type': 'application/json',
+          'auth-token': session?.user.token,
+        },
+      })
+      .then(() => {
+        setNotification({
+          message: '投稿が成功しました。',
+          severity: 'info',
+          pathname: '/',
+        })
+        resetFormData()
+        router.push('/')
+      })
+      .catch((err) => {
+        console.log(err)
+        setNotification({
+          message: '投稿に失敗しました。',
+          severity: 'error',
+          pathname: '/',
+        })
+        router.push('/')
+        // ローディング終了
+        setIsLoading(false)
+      })
+      .finally(() => {
+        // ローディング終了
+        setIsLoading(false)
+      })
   }
 
   const handleInputImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -140,7 +170,6 @@ const Posts = () => {
       return null
     }
   }
-
   const { data, error } = useSWR(categoriesUrl, fetcher)
 
   if (error) return <Error />
@@ -148,172 +177,211 @@ const Posts = () => {
 
   return (
     <Container maxWidth="sm" sx={{ mt: 5, mb: 11 }}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Typography variant="body2" sx={{ mb: 1, fontWeight: 'bold' }}>
-          投稿画像
-        </Typography>
-        <Controller
-          name="image"
-          control={control}
-          render={({ field }) => (
-            <>
-              <Box
-                sx={{
-                  position: 'relative',
-                  width: '100%',
-                  aspectRatio: '1 / 0.8',
-                  mb: 2,
-                  border: field.value
-                    ? '1px solid #F5F5F5'
-                    : '1px solid #666666',
-                  borderRadius: 1,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  overflow: 'hidden',
-                }}
-              >
-                {field.value ? (
-                  <Image
-                    src={URL.createObjectURL(field.value)}
-                    alt="image"
-                    fill
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Typography variant="body2" sx={{ mb: 1, fontWeight: 'bold' }}>
+            投稿画像
+          </Typography>
+          <Controller
+            name="image"
+            control={control}
+            render={({ field }) => (
+              <>
+                <Box
+                  sx={{
+                    position: 'relative',
+                    width: '100%',
+                    aspectRatio: '1 / 0.8',
+                    mb: 2,
+                    border: field.value
+                      ? '1px solid #F5F5F5'
+                      : '1px solid #666666',
+                    borderRadius: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    overflow: 'hidden',
+                  }}
+                >
+                  {field.value ? (
+                    <Image
+                      src={URL.createObjectURL(field.value)}
+                      alt="image"
+                      fill
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                      }}
+                    />
+                  ) : (
+                    <Typography variant="body2" sx={{ color: '#aaa' }}>
+                      画像をアップロードしてください
+                    </Typography>
+                  )}
+                </Box>
+                <Button
+                  component="label"
+                  role={undefined}
+                  variant="outlined"
+                  tabIndex={-1}
+                  startIcon={<CloudUploadIcon />}
+                  sx={{
+                    fontSize: 11,
+                    color: '#666666',
+                    borderColor: '#666666',
+                  }}
+                >
+                  ファイルをアップロード
+                  <VisuallyHiddenInput
+                    type="file"
+                    accept=".jpg,.jpeg,.png"
+                    onChange={(e) => {
+                      const file = handleInputImage(e)
+                      if (file) {
+                        field.onChange(file)
+                        setField('image', file)
+                      }
                     }}
                   />
-                ) : (
-                  <Typography variant="body2" sx={{ color: '#aaa' }}>
-                    画像をアップロードしてください
-                  </Typography>
-                )}
-              </Box>
-              <Button
-                component="label"
-                role={undefined}
-                variant="outlined"
-                tabIndex={-1}
-                startIcon={<CloudUploadIcon />}
-                sx={{ fontSize: 11, color: '#666666', borderColor: '#666666' }}
-              >
-                ファイルをアップロード
-                <VisuallyHiddenInput
-                  type="file"
-                  accept=".jpg,.jpeg,.png"
-                  onChange={(e) => {
-                    const file = handleInputImage(e)
-                    if (file) field.onChange(file)
-                  }}
-                />
-              </Button>
-            </>
+                </Button>
+              </>
+            )}
+          />
+          {errors.image && errors.image.message && (
+            <ValidationMessage message={errors.image.message} />
           )}
-        />
-        {errors.image && errors.image.message && (
-          <ValidationMessage message={errors.image.message} />
-        )}
 
-        <Typography variant="body2" sx={{ mt: 5, mb: 1, fontWeight: 'bold' }}>
-          投稿内容
-        </Typography>
-        <Controller
-          name="content"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              id="outlined-multiline-static"
-              multiline
-              rows={5}
-              placeholder="あなたの趣味について入力してください"
-              sx={{
-                width: '100%',
-              }}
-            />
-          )}
-        />
-        {errors.content && errors.content.message && (
-          <ValidationMessage message={errors.content.message} />
-        )}
-
-        <Typography variant="body2" sx={{ mt: 5, mb: 1, fontWeight: 'bold' }}>
-          カテゴリー
-        </Typography>
-        <Controller
-          name="category"
-          control={control}
-          render={({ field }) => (
-            <FormControl size="small" variant="outlined">
-              <Select
+          <Typography variant="body2" sx={{ mt: 5, mb: 1, fontWeight: 'bold' }}>
+            投稿内容
+          </Typography>
+          <Controller
+            name="content"
+            control={control}
+            render={({ field }) => (
+              <TextField
                 {...field}
-                label="category"
-                displayEmpty
-                input={<OutlinedInput />}
+                id="outlined-multiline-static"
+                multiline
+                rows={5}
+                placeholder="あなたの趣味について入力してください"
                 sx={{
-                  height: 35,
-                  fontSize: 13,
+                  width: '100%',
                 }}
-                MenuProps={MenuProps}
-              >
-                <MenuItem value="" disabled>
-                  <Typography sx={{ fontSize: 13, color: '#aaaaaa' }}>
-                    カテゴリーを選択
-                  </Typography>
-                </MenuItem>
-                {data.map((category: categoryProps) => (
-                  <MenuItem
-                    key={category.id}
-                    value={category.id.toString()}
-                    sx={{ fontSize: 13 }}
-                  >
-                    {category.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+                onChange={(e) => {
+                  field.onChange(e.target.value)
+                  setField('content', e.target.value)
+                }}
+              />
+            )}
+          />
+          {errors.content && errors.content.message && (
+            <ValidationMessage message={errors.content.message} />
           )}
-        />
-        {errors.category && errors.category.message && (
-          <ValidationMessage message={errors.category.message} />
-        )}
 
-        <Typography variant="body2" sx={{ mt: 5, mb: 1, fontWeight: 'bold' }}>
-          おすすめ商品
-        </Typography>
+          <Typography variant="body2" sx={{ mt: 5, mb: 1, fontWeight: 'bold' }}>
+            カテゴリー
+          </Typography>
+          <Controller
+            name="category"
+            control={control}
+            render={({ field }) => (
+              <FormControl size="small" variant="outlined">
+                <Select
+                  {...field}
+                  label="category"
+                  displayEmpty
+                  input={<OutlinedInput />}
+                  sx={{
+                    height: 35,
+                    fontSize: 13,
+                  }}
+                  MenuProps={MenuProps}
+                  onChange={(e) => {
+                    field.onChange(e.target.value)
+                    setField('category', e.target.value)
+                  }}
+                >
+                  <MenuItem value="" disabled>
+                    <Typography sx={{ fontSize: 13, color: '#aaaaaa' }}>
+                      カテゴリーを選択
+                    </Typography>
+                  </MenuItem>
+                  {data.map((category: categoryProps) => (
+                    <MenuItem
+                      key={category.id}
+                      value={category.id.toString()}
+                      sx={{ fontSize: 13 }}
+                    >
+                      {category.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+          />
+          {errors.category && errors.category.message && (
+            <ValidationMessage message={errors.category.message} />
+          )}
 
-        <Link href="/posts/search">
+          <Typography variant="body2" sx={{ mt: 5, mb: 1, fontWeight: 'bold' }}>
+            おすすめ商品
+          </Typography>
+
+          <Link href="/posts/search">
+            <Button
+              variant="outlined"
+              startIcon={<SearchIcon />}
+              sx={{
+                width: 150,
+                height: 35,
+                color: '#666666',
+                borderColor: '#666666',
+              }}
+            >
+              商品を追加
+            </Button>
+          </Link>
+          {isSubmitted && errors.products && errors.products.message && (
+            <ValidationMessage message={errors.products.message} />
+          )}
+
+          <Grid container spacing={4} sx={{ mt: 3 }}>
+            {formData.products &&
+              formData.products.map((product) => (
+                <Grid
+                  size={{ xs: 6, sm: 4 }}
+                  key={product.itemCode}
+                  sx={{ cursor: 'pointer' }}
+                >
+                  <ProductCard
+                    id={product.itemCode}
+                    name={product.itemName}
+                    price={product.itemPrice}
+                    image={product.mediumImageUrls}
+                    selected={false}
+                    deletable={true}
+                  />
+                </Grid>
+              ))}
+          </Grid>
+
           <Button
-            variant="outlined"
-            startIcon={<SearchIcon />}
+            type="submit"
             sx={{
-              width: 150,
-              height: 35,
-              color: '#666666',
-              borderColor: '#666666',
+              backgroundColor: 'black',
+              color: 'white',
+              width: '100%',
+              fontSize: 13,
+              mt: 5,
             }}
           >
-            商品を追加
+            投稿
           </Button>
-        </Link>
-        {errors.products && errors.products.message && (
-          <ValidationMessage message={errors.products.message} />
-        )}
-
-        <Button
-          type="submit"
-          sx={{
-            backgroundColor: 'black',
-            color: 'white',
-            width: '100%',
-            fontSize: 13,
-            mt: 5,
-          }}
-        >
-          投稿
-        </Button>
-      </form>
+        </form>
+      )}
     </Container>
   )
 }
