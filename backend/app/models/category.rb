@@ -12,6 +12,8 @@
 #  index_categories_on_name  (name) UNIQUE
 #
 class Category < ApplicationRecord
+  has_many :posts, dependent: :destroy
+
   validates :name, presence: true, uniqueness: true
 
   has_one_attached :image

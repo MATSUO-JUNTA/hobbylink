@@ -75,7 +75,7 @@ const Posts = () => {
     content: z
       .string()
       .min(1, '投稿内容を入力してください。')
-      .max(200, '投稿内容は200文字以内で入力してください。'),
+      .max(500, '投稿内容は500文字以内で入力してください。'),
     category: z.string().min(1, 'カテゴリーを選択してください。'),
     products: z
       .array(
@@ -117,15 +117,13 @@ const Posts = () => {
       formData.append('image', data.image)
     }
     formData.append('content', data.content)
-    formData.append('category', data.category)
-    data.products.forEach((product) =>
-      formData.append('products', JSON.stringify(product)),
-    )
+    formData.append('category_id', data.category)
+    formData.append('products', JSON.stringify(data.products))
 
     axios
       .post(createPostUrl, formData, {
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'multipart/form-data',
           'auth-token': session?.user.token,
         },
       })
@@ -146,8 +144,6 @@ const Posts = () => {
           pathname: '/',
         })
         router.push('/')
-        // ローディング終了
-        setIsLoading(false)
       })
       .finally(() => {
         // ローディング終了
