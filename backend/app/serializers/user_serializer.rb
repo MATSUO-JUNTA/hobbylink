@@ -22,7 +22,7 @@ class UserSerializer < ActiveModel::Serializer
   attributes :id, :name, :image, :bio, :token
 
   def image
-    object.image.attached? ? rails_blob_url(object.image) : nil
+    object.image.attached? ? rails_blob_url(object.image, host: UrlHost.host) : nil
   end
 
   def token
