@@ -4,6 +4,8 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
 import type { Metadata } from 'next'
 import Footer from './components/Footer'
 import Header from './components/Header'
+import { NotificationProvider } from '@/contexts/NotificationContext'
+import { ProductProvider } from '@/contexts/ProductContext'
 import NextAuthProvider from '@/providers/NextAuth'
 import theme from '@/styles/theme'
 import '@/styles/destyle.css'
@@ -25,9 +27,13 @@ export default function RootLayout({
           <AppRouterCacheProvider>
             <ThemeProvider theme={theme}>
               <CssBaseline />
-              <Header />
-              {children}
-              <Footer />
+              <ProductProvider>
+                <NotificationProvider>
+                  <Header />
+                  {children}
+                  <Footer />
+                </NotificationProvider>
+              </ProductProvider>
             </ThemeProvider>
           </AppRouterCacheProvider>
         </NextAuthProvider>

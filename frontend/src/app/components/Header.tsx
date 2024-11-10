@@ -19,6 +19,7 @@ import {
 } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
 import { useState } from 'react'
 import LoginModal from './LoginModal'
@@ -38,6 +39,11 @@ const Header = () => {
     setAnchorElUser(null)
   }
   const { data: session } = useSession()
+
+  const hiddenPathnames = ['/posts/search']
+  const pathname = usePathname()
+
+  if (hiddenPathnames.includes(pathname)) return <></>
 
   return (
     <Box>

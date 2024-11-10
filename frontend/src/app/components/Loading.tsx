@@ -7,7 +7,8 @@ const Loading = () => {
       sx={{
         display: 'flex',
         justifyContent: 'center',
-        height: '100vh',
+        alignItems: 'center',
+        height: 'calc(100vh - 64px)',
       }}
     >
       <Image src="/loading.svg" alt="Loading..." width={90} height={90}></Image>
