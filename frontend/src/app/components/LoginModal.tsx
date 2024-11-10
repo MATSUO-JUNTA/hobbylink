@@ -1,8 +1,17 @@
 import CloseIcon from '@mui/icons-material/Close'
-import { Box, Button, IconButton, Modal, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  IconButton,
+  Modal,
+  Typography,
+  CircularProgress,
+} from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
 import { signIn } from 'next-auth/react'
+import { useState, useContext } from 'react'
+import { NotificationContext } from '@/contexts/NotificationContext'
 
 type LoginModalProps = {
   open: boolean
@@ -26,6 +35,36 @@ const style = {
 }
 
 const LoginModal = ({ open, handleClose }: LoginModalProps) => {
+  const [isLoading, setIsLoading] = useState(false)
+  const { setNotification } = useContext(NotificationContext)
+
+  const handleSignIn = (provider: string) => {
+    // ローディング開始
+    setIsLoading(true)
+
+    signIn(provider)
+      .then(() => {
+        setNotification({
+          message: 'ログインが成功しました。',
+          severity: 'info',
+          pathname: '/',
+        })
+      })
+      .catch((err) => {
+        console.log(err)
+        setNotification({
+          message: 'ログインに失敗しました。',
+          severity: 'error',
+          pathname: '/',
+        })
+      })
+      .finally(() => {
+        // ローディング終了
+        setIsLoading(false)
+        handleClose()
+      })
+  }
+
   return (
     <Modal open={open}>
       <Box sx={style}>
@@ -56,20 +95,26 @@ const LoginModal = ({ open, handleClose }: LoginModalProps) => {
             ':hover': { backgroundColor: '#f0f0f0' },
           }}
           disableRipple
-          onClick={() => signIn('google')}
+          onClick={() => !isLoading && handleSignIn('google')}
         >
-          <Image src="/google.png" alt="google" width={20} height={20} />
-          <Typography
-            sx={{
-              textTransform: 'none',
-              color: 'black',
-              marginLeft: 1,
-              fontWeight: 'bold',
-              fontSize: 13.5,
-            }}
-          >
-            Login with Google
-          </Typography>
+          {isLoading ? (
+            <CircularProgress size={20} />
+          ) : (
+            <>
+              <Image src="/google.png" alt="google" width={20} height={20} />
+              <Typography
+                sx={{
+                  textTransform: 'none',
+                  color: 'black',
+                  marginLeft: 1,
+                  fontWeight: 'bold',
+                  fontSize: 13.5,
+                }}
+              >
+                Login with Google
+              </Typography>
+            </>
+          )}
         </Button>
         <Typography
           sx={{
