@@ -19,15 +19,15 @@ import Loading from '@/app/components/Loading'
 import NavigationHeader from '@/app/components/NavigationHeader'
 import ProductCard from '@/app/components/ProductCard'
 import ValidationMessage from '@/app/components/ValidationMessage'
-import { ProductContext, RakutenProduct } from '@/contexts/ProductContext'
+import { FormContext, Product } from '@/contexts/FormContext'
 import { fetcher } from '@/utils/fetcher'
 import { searchProductsUrl } from '@/utils/urls'
 
 const Search = () => {
   const [keyword, setKeyword] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
-  const { formData, addProducts } = useContext(ProductContext)
-  const [selectedProducts, setSelectedProducts] = useState<RakutenProduct[]>(
+  const { formData, addProducts } = useContext(FormContext)
+  const [selectedProducts, setSelectedProducts] = useState<Product[]>(
     formData.products,
   )
   const router = useRouter()
@@ -42,11 +42,11 @@ const Search = () => {
     }
   }
 
-  const addProduct = (product: RakutenProduct) => {
+  const addProduct = (product: Product) => {
     setSelectedProducts((prev) =>
-      prev.some((currentProd) => currentProd.itemCode === product.itemCode)
+      prev.some((currentProd) => currentProd.productUrl === product.productUrl)
         ? prev.filter(
-            (currentProd) => currentProd.itemCode !== product.itemCode,
+            (currentProd) => currentProd.productUrl !== product.productUrl,
           )
         : [...prev, product],
     )
@@ -54,7 +54,7 @@ const Search = () => {
 
   const handleAddProducts = () => {
     addProducts(selectedProducts)
-    router.push('/posts')
+    router.back()
   }
 
   // 楽天商品データを取得
@@ -122,21 +122,21 @@ const Search = () => {
               </Typography>
             ) : (
               <Grid container spacing={5} sx={{ mt: 4 }}>
-                {products.map((product: RakutenProduct) => (
+                {products.map((product: Product) => (
                   <Grid
                     size={{ xs: 6, sm: 4 }}
-                    key={product.itemCode}
+                    key={product.id}
                     onClick={() => addProduct(product)}
                     sx={{ cursor: 'pointer' }}
                   >
                     <ProductCard
-                      id={product.itemCode}
-                      name={product.itemName}
-                      price={product.itemPrice}
-                      image={product.mediumImageUrls}
+                      id={product.id}
+                      name={product.name}
+                      price={product.price}
+                      image={product.image}
                       selected={selectedProducts.some(
-                        (selected: RakutenProduct) =>
-                          selected.itemCode === product.itemCode,
+                        (selected: Product) =>
+                          selected.productUrl === product.productUrl,
                       )}
                       deletable={false}
                     />

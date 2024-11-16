@@ -160,7 +160,7 @@ const PostDetail = () => {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  <Link href="/privacy">
+                  <Link href={`/posts/${post.id}/edit`}>
                     <MenuItem
                       sx={{
                         px: 1.5,
