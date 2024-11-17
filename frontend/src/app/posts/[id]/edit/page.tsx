@@ -24,13 +24,14 @@ type PostProps = {
 const Posts = () => {
   const { id } = useParams<{ id: string }>()
   const { data: session } = useSession()
-  const { setField, addProducts } = useContext(FormContext)
+  const { isFormReady, setIsFormReady, setField, addProducts } =
+    useContext(FormContext)
   const { data, error } = useSWR(
     id && session ? [editPostUrl(id), session.user.token] : null,
     ([url, token]) => fetcher(url, token as string),
   )
   useEffect(() => {
-    if (data && !sessionStorage.getItem('isSetForm')) {
+    if (data && !isFormReady) {
       const post: PostProps = camelcaseKeys(data, { deep: true })
 
       imageFetcher(post.image).then((file) => {
@@ -46,9 +47,9 @@ const Posts = () => {
           id: product.id.toString(),
         })),
       )
-      sessionStorage.setItem('isSetForm', 'true')
+      setIsFormReady(true)
     }
-  }, [data, setField, addProducts])
+  }, [data, setField, addProducts, isFormReady, setIsFormReady])
 
   if (error) return <Error />
   if (!data) return <Loading />

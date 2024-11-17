@@ -84,3 +84,9 @@ Style/FrozenStringLiteralComment:
 # メソッドパラメータ名の最小文字数を設定
 Naming/MethodParameterName:
   MinNameLength: 1
+
+# `Rails/Pluck` ルールを無効化
+Rails/Pluck:
+  Enabled: false
+  Exclude:
+    - 'app/controllers/api/v1/posts_controller.rb'
