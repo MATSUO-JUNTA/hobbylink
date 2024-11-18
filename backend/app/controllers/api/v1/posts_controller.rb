@@ -1,8 +1,8 @@
 require 'open-uri'
 
 class Api::V1::PostsController < ApplicationController
-  before_action :authenticate, only: [:create, :edit, :update]
-  before_action :set_post, only: [:update]
+  before_action :authenticate, only: [:create, :edit, :update, :destroy]
+  before_action :set_post, only: [:update, :destroy]
 
   def show
     posts = Post.includes(:user, :category, :products).find(params[:id])
@@ -58,6 +58,26 @@ class Api::V1::PostsController < ApplicationController
     head :ok
   rescue StandardError
     render json: { error: '投稿の更新に失敗しました。' }, status: :unprocessable_entity
+  end
+
+  def destroy
+    ActiveRecord::Base.transaction do
+      post_products = Post.includes(products: :posts).find(@post.id)
+      if @post.destroy!
+        post_products.products.each do |product|
+          if product.posts.size == 1
+            product.destroy!
+          else
+            # 他の投稿で使われている場合、関連だけ削除
+            @post.products.delete(product)
+          end
+        end
+      end
+    end
+
+    head :ok
+  rescue StandardError
+    render json: { error: '投稿の削除に失敗しました。' }, status: :unprocessable_entity
   end
 
   private

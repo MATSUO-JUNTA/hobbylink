@@ -25,3 +25,6 @@ export const editPostUrl = (id: string) => `${HOST_API_URL}/posts/${id}/edit`
 
 // 投稿更新用URL（PATCH）
 export const updatePostUrl = (id: string) => `${HOST_API_URL}/posts/${id}`
+
+// 投稿削除用URL（DELETE）
+export const deletePostUrl = (id: string) => `${HOST_API_URL}/posts/${id}`
