@@ -19,3 +19,9 @@ export const createPostUrl = `${HOST_API_URL}/posts`
 
 // 投稿取得URL（GET）
 export const getPostByIdUrl = (id: string) => `${HOST_API_URL}/posts/${id}`
+
+// 投稿編集用URL（GET）
+export const editPostUrl = (id: string) => `${HOST_API_URL}/posts/${id}/edit`
+
+// 投稿更新用URL（PATCH）
+export const updatePostUrl = (id: string) => `${HOST_API_URL}/posts/${id}`

@@ -2,35 +2,35 @@
 
 import { createContext, useState } from 'react'
 
-type ProductProviderProps = {
+type FormProviderProps = {
   children: React.ReactNode
 }
 
-type RakutenProduct = {
-  itemCode: string
-  itemName: string
-  itemCaption: string
-  itemPrice: number
-  mediumImageUrls: string
-  itemUrl: string
+type Product = {
+  id: string
+  name: string
+  details: string
+  price: number
+  image: string
+  productUrl: string
 }
 
 type Form = {
   image: File | null
   content: string
   category: string
-  products: RakutenProduct[]
+  products: Product[]
 }
 
-type ProductContextType = {
+type FormContextType = {
   formData: Form
   setField: (key: string, value: File | string) => void
-  addProducts: (product: RakutenProduct[]) => void
-  deleteProduct: (itemCode: string) => void
+  addProducts: (product: Product[]) => void
+  deleteProduct: (id: string) => void
   resetFormData: () => void
 }
 
-const ProductContext = createContext<ProductContextType>({
+const FormContext = createContext<FormContextType>({
   formData: {
     image: null,
     content: '',
@@ -43,7 +43,7 @@ const ProductContext = createContext<ProductContextType>({
   resetFormData: () => {},
 })
 
-const ProductProvider = ({ children }: ProductProviderProps) => {
+const FormProvider = ({ children }: FormProviderProps) => {
   const [formData, setFormData] = useState<Form>({
     image: null,
     content: '',
@@ -58,18 +58,18 @@ const ProductProvider = ({ children }: ProductProviderProps) => {
     }))
   }
 
-  const addProducts = (products: RakutenProduct[]) => {
+  const addProducts = (products: Product[]) => {
     setFormData((prev) => ({
       ...prev,
       products: [...products],
     }))
   }
 
-  const deleteProduct = (itemCode: string) => {
+  const deleteProduct = (id: string) => {
     setFormData((prev) => ({
       ...prev,
       products: prev.products.filter(
-        (currentProduct) => currentProduct.itemCode !== itemCode,
+        (currentProduct) => currentProduct.id !== id,
       ),
     }))
   }
@@ -83,13 +83,13 @@ const ProductProvider = ({ children }: ProductProviderProps) => {
     })
   }
   return (
-    <ProductContext.Provider
+    <FormContext.Provider
       value={{ formData, setField, addProducts, deleteProduct, resetFormData }}
     >
       {children}
-    </ProductContext.Provider>
+    </FormContext.Provider>
   )
 }
 
-export type { RakutenProduct, Form }
-export { ProductContext, ProductProvider }
+export type { Product, Form }
+export { FormContext, FormProvider }

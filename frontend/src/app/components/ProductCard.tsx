@@ -1,7 +1,7 @@
 import { Card, CardContent, Typography, Box } from '@mui/material'
 import Image from 'next/image'
 import { useContext } from 'react'
-import { ProductContext } from '@/contexts/ProductContext'
+import { FormContext } from '@/contexts/FormContext'
 
 type ProductCardProps = {
   id: string
@@ -13,7 +13,7 @@ type ProductCardProps = {
 }
 
 const ProductCard = (props: ProductCardProps) => {
-  const { deleteProduct } = useContext(ProductContext)
+  const { deleteProduct } = useContext(FormContext)
 
   return (
     <>

@@ -13,7 +13,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState, useContext } from 'react'
 import LoginModal from './LoginModal'
-import { ProductContext } from '@/contexts/ProductContext'
+import { FormContext } from '@/contexts/FormContext'
 
 const getInitValue = (pathname: string) => {
   if (pathname === '/') return 0
@@ -28,7 +28,7 @@ const Footer = () => {
   const router = useRouter()
   const pathname = usePathname()
   const [value, setValue] = useState(getInitValue(pathname))
-  const { resetFormData } = useContext(ProductContext)
+  const { resetFormData } = useContext(FormContext)
   const [open, setOpen] = useState<boolean>(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
