@@ -28,6 +28,8 @@ type FormContextType = {
   addProducts: (product: Product[]) => void
   deleteProduct: (id: string) => void
   resetFormData: () => void
+  isFormReady: boolean
+  setIsFormReady: (isFormReady: boolean) => void
 }
 
 const FormContext = createContext<FormContextType>({
@@ -41,6 +43,8 @@ const FormContext = createContext<FormContextType>({
   addProducts: () => {},
   deleteProduct: () => {},
   resetFormData: () => {},
+  isFormReady: false,
+  setIsFormReady: () => {},
 })
 
 const FormProvider = ({ children }: FormProviderProps) => {
@@ -50,7 +54,9 @@ const FormProvider = ({ children }: FormProviderProps) => {
     category: '',
     products: [],
   })
+  const [isFormReady, setIsFormReady] = useState<boolean>(false)
 
+  // フィールドの値を設定
   const setField = (key: string, value: File | string) => {
     setFormData((prev) => ({
       ...prev,
@@ -58,6 +64,7 @@ const FormProvider = ({ children }: FormProviderProps) => {
     }))
   }
 
+  // 商品を追加
   const addProducts = (products: Product[]) => {
     setFormData((prev) => ({
       ...prev,
@@ -65,6 +72,7 @@ const FormProvider = ({ children }: FormProviderProps) => {
     }))
   }
 
+  // 商品を削除
   const deleteProduct = (id: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -74,6 +82,7 @@ const FormProvider = ({ children }: FormProviderProps) => {
     }))
   }
 
+  // フォームをリセット
   const resetFormData = () => {
     setFormData({
       image: null,
@@ -81,10 +90,19 @@ const FormProvider = ({ children }: FormProviderProps) => {
       category: '',
       products: [],
     })
+    setIsFormReady(false)
   }
   return (
     <FormContext.Provider
-      value={{ formData, setField, addProducts, deleteProduct, resetFormData }}
+      value={{
+        formData,
+        isFormReady,
+        setField,
+        addProducts,
+        deleteProduct,
+        resetFormData,
+        setIsFormReady,
+      }}
     >
       {children}
     </FormContext.Provider>

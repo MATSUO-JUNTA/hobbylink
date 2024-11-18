@@ -58,7 +58,7 @@ const Footer = () => {
         showLabels
         value={value}
         onChange={(event, newValue) => {
-          if (newValue !== 2) resetFormData()
+          resetFormData()
 
           switch (newValue) {
             case 0:
