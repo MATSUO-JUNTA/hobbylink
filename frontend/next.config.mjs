@@ -23,6 +23,10 @@ const nextConfig = {
         hostname: 'localhost',
       },
       {
+        protocol: 'http',
+        hostname: 'backend',
+      },
+      {
         protocol: 'https',
         hostname: 'thumbnail.image.rakuten.co.jp',
       },
