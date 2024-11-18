@@ -3,6 +3,11 @@ require 'open-uri'
 class Api::V1::PostsController < ApplicationController
   before_action :authenticate, only: [:create]
 
+  def show
+    posts = Post.includes(:user, :category, :products).find(params[:id])
+    render json: posts, status: :ok
+  end
+
   def create
     ActiveRecord::Base.transaction do
       post = @current_user.posts.new(post_params)
