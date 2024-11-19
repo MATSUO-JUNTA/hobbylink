@@ -28,3 +28,6 @@ export const updatePostUrl = (id: string) => `${HOST_API_URL}/posts/${id}`
 
 // 投稿削除用URL（DELETE）
 export const deletePostUrl = (id: string) => `${HOST_API_URL}/posts/${id}`
+
+// 新着投稿取得用URL（GET）
+export const newPostsUrl = `${HOST_API_URL}/posts/new_posts`
