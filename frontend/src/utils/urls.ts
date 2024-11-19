@@ -9,7 +9,8 @@ export const signInUrl = (provider: string) =>
   `${DOCKER_API_URL}/auth/${provider}/callback`
 
 // カテゴリー一覧取得用のURL（GET）
-export const categoriesUrl = `${HOST_API_URL}/categories`
+export const categoriesUrl = (includeImage: boolean) =>
+  `${HOST_API_URL}/categories?include_image=${includeImage}`
 
 // 商品検索用URL（GET）
 export const searchProductsUrl = `${HOST_API_URL}/products/search?`

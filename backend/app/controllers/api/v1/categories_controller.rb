@@ -1,6 +1,7 @@
 class Api::V1::CategoriesController < ApplicationController
   def index
     categories = Category.all
-    render json: categories, each_serializer: PostCategorySerializer, status: :ok
+    serializer = params[:include_image] == 'true' ? CategorySerializer : PostCategorySerializer
+    render json: categories, each_serializer: serializer, status: :ok
   end
 end

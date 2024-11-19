@@ -40,7 +40,6 @@ type postFormProps = {
 
 type categoryProps = {
   id: string
-  image: string
   name: string
 }
 
@@ -179,7 +178,7 @@ const PostForm = ({ postId }: postFormProps) => {
       return null
     }
   }
-  const { data, error } = useSWR(categoriesUrl, fetcher)
+  const { data, error } = useSWR(categoriesUrl(false), fetcher)
 
   if (error) return <Error />
   if (!data) return <Loading />
