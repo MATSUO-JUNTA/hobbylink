@@ -115,7 +115,7 @@ const Search = () => {
             {errorMessage && <ValidationMessage message={errorMessage} />}
 
             {isLoading ? (
-              <Loading />
+              <Loading align="top" />
             ) : keyword && products.length === 0 ? (
               <Typography variant="body2" sx={{ mt: 2, textAlign: 'center' }}>
                 検索結果が見つかりませんでした。

@@ -1,27 +1,63 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
-import useSWR from 'swr'
-import { fetcher } from '@/utils/fetcher'
-import { apiCheckUrl } from '@/utils/urls'
+import { Tab, Tabs, Box } from '@mui/material'
+import { useState } from 'react'
+import HomePosts from './HomePosts'
+import { newPostsUrl } from '@/utils/urls'
+
+interface TabPanelProps {
+  children?: React.ReactNode
+  index: number
+  value: number
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props
+
+  return (
+    <Box
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ p: 1 }}>{children}</Box>}
+    </Box>
+  )
+}
 
 const Home = () => {
-  const { data, error } = useSWR(apiCheckUrl, fetcher)
-  const { data: session } = useSession()
+  const [value, setValue] = useState(0)
 
-  if (error) return <div>An error has occurred.</div>
-  if (!data) return <div>Loading...</div>
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue)
+  }
 
   return (
     <>
-      <div>{data.message}</div>
-      <div>
-        {session && session.user && (
-          <div>
-            <p>Image: {session.user.image}</p>
-          </div>
-        )}
-      </div>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          sx={{
+            width: '100%',
+            maxWidth: 720,
+          }}
+        >
+          <Tab label="新着" />
+          <Tab label="おすすめ" />
+        </Tabs>
+      </Box>
+
+      <Box sx={{ borderBottom: '1px solid #999999', mb: 3 }} />
+
+      <TabPanel value={value} index={0}>
+        <HomePosts url={newPostsUrl} />
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        <HomePosts url="" />
+      </TabPanel>
     </>
   )
 }

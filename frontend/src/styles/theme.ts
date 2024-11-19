@@ -47,6 +47,27 @@ const theme = createTheme({
         },
       },
     },
+    MuiTabs: {
+      styleOverrides: {
+        indicator: {
+          backgroundColor: 'black',
+          height: 1,
+        },
+      },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          color: '#999999',
+          fontSize: 13.5,
+          width: '50%',
+          fontWeight: 'bold',
+          '&.Mui-selected': {
+            color: 'black',
+          },
+        },
+      },
+    },
   },
 })
 
