@@ -1,11 +1,9 @@
-class PostSerializer < ApplicationSerializer
+class NewPostSerializer < ApplicationSerializer
   include Rails.application.routes.url_helpers
 
   attributes :id, :image, :content, :created_at
 
-  belongs_to :user,     serializer: PostUserSerializer
-  belongs_to :category, serializer: PostCategorySerializer
-  has_many   :products, serializer: PostProductSerializer
+  belongs_to :user, serializer: PostUserSerializer
 
   def image
     object.image.attached? ? rails_blob_url(object.image) : nil

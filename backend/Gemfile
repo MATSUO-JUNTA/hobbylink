@@ -29,6 +29,8 @@ gem 'annotate'
 
 gem 'rakuten_web_service'
 
+gem 'kaminari'
+
 group :development, :test do
   gem 'pry-byebug'
   gem 'pry-doc'

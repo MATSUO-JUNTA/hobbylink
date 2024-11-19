@@ -80,6 +80,11 @@ class Api::V1::PostsController < ApplicationController
     render json: { error: '投稿の削除に失敗しました。' }, status: :unprocessable_entity
   end
 
+  def new_posts
+    posts = Post.includes(:user).order(created_at: :desc).page(params[:page]).per(10)
+    render json: posts, each_serializer: NewPostSerializer, status: :ok
+  end
+
   private
 
   # 商品追加処理
