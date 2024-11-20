@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       resources :posts, only: [:create, :show, :edit, :update, :destroy] do
         collection do
           get "new_posts"
+          get "search"
         end
       end
       resources :categories, only: [:index]

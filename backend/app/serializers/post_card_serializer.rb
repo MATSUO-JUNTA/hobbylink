@@ -1,4 +1,4 @@
-class NewPostSerializer < ApplicationSerializer
+class PostCardSerializer < ApplicationSerializer
   include Rails.application.routes.url_helpers
 
   attributes :id, :image, :content, :created_at
