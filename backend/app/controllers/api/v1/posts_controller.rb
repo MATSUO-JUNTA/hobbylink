@@ -82,7 +82,23 @@ class Api::V1::PostsController < ApplicationController
 
   def new_posts
     posts = Post.includes(:user).order(created_at: :desc).page(params[:page]).per(10)
-    render json: posts, each_serializer: NewPostSerializer, status: :ok
+    render json: posts, each_serializer: PostCardSerializer, status: :ok
+  end
+
+  def search
+    posts = Post.includes(:user)
+
+    posts = if params[:search_term].present?
+              posts.joins(:category).where(
+                'posts.content LIKE ? or categories.name LIKE ?',
+                "%#{params[:search_term]}%",
+                "%#{params[:search_term]}%"
+              )
+            else
+              posts.where(category_id: params[:category_id])
+            end
+
+    render json: posts.page(params[:page]).per(10), each_serializer: PostCardSerializer, status: :ok
   end
 
   private
@@ -110,7 +126,7 @@ class Api::V1::PostsController < ApplicationController
 
   # 商品削除処理
   def delete_products(products, product_urls)
-    # 削除された商品を取p得
+    # 削除された商品を取得
     remove_product_urls = product_urls - products.map { |product| product['productUrl'] }
     remove_products = Product.includes(:posts).where(product_url: remove_product_urls)
 
