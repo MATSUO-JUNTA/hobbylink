@@ -1,5 +1,7 @@
 class Api::V1::ProductsController < ApplicationController
   def show
+    product = Product.includes(:posts).find(params[:id])
+    render json: product, status: :ok
   end
 
   def search
