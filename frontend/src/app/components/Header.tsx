@@ -40,7 +40,7 @@ const Header = () => {
   }
   const { data: session } = useSession()
 
-  const hiddenPathnames = ['/posts/search']
+  const hiddenPathnames = ['/posts/search', '/search/search-results']
   const pathname = usePathname()
   const isPathMatch = /\/posts\/\d+$/.test(pathname)
 
