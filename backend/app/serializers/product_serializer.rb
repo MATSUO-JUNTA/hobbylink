@@ -8,4 +8,12 @@ class ProductSerializer < ApplicationSerializer
   def image
     object.image.attached? ? rails_blob_url(object.image) : nil
   end
+
+  def details
+    object.details.gsub('。', "。\n")
+  end
+
+  def price
+    object.price.to_i.to_fs(:delimited)
+  end
 end

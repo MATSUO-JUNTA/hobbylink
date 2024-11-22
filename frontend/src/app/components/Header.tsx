@@ -42,7 +42,8 @@ const Header = () => {
 
   const hiddenPathnames = ['/posts/search', '/search/search-results']
   const pathname = usePathname()
-  const isPathMatch = /\/posts\/\d+$/.test(pathname)
+  const isPathMatch =
+    /\/posts\/\d+$/.test(pathname) || /\/product\/\d+$/.test(pathname)
 
   if (isPathMatch || hiddenPathnames.includes(pathname)) return <></>
 
