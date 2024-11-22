@@ -26,12 +26,12 @@ type categoryProps = {
 const PostSearch = () => {
   const router = useRouter()
 
-  const handleSearch = (searchTerm?: string, categorieId?: number) => {
+  const handleSearch = (searchTerm?: string, categoryId?: number) => {
     const params = new URLSearchParams()
 
     if (searchTerm) params.append('searchTerm', searchTerm)
 
-    if (categorieId) params.append('categorieId', categorieId.toString())
+    if (categoryId) params.append('categoryId', categoryId.toString())
 
     if (params) {
       router.push(`/search/search-results?${params}`)
@@ -70,7 +70,7 @@ const PostSearch = () => {
       <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1 }}>
         カテゴリーから選ぶ
       </Typography>
-      <Grid container spacing={4}>
+      <Grid container spacing={{ xs: 4, sm: 5 }}>
         {data &&
           data.map((categorie: categoryProps) => (
             <Grid
@@ -83,7 +83,7 @@ const PostSearch = () => {
                 sx={{
                   position: 'relative',
                   width: '100%',
-                  height: 160,
+                  height: { xs: 155, sm: 190 },
                   backgroundColor: 'black',
                   borderRadius: 1,
                 }}

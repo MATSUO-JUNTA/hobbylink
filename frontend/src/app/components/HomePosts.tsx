@@ -39,7 +39,8 @@ const HomePosts = ({ url }: HomePostsProps) => {
     if (
       !isValidating &&
       inView &&
-      !(data && data[data.length - 1].length < 10)
+      data?.[0]?.length > 0 &&
+      data?.[data?.length - 1]?.length === 10
     ) {
       setSize(size + 1)
     }
@@ -50,13 +51,13 @@ const HomePosts = ({ url }: HomePostsProps) => {
   const posts = data ? camelcaseKeys(data.flat()) : []
 
   return (
-    <Box sx={{ maxWidth: 720, width: '80%', mx: 'auto', mb: 11 }}>
+    <Box sx={{ width: '85%', mx: 'auto', mb: 11 }}>
       <Grid container spacing={5}>
         {posts &&
           posts.map((post: PostProps) => (
             <Grid
               key={post.id}
-              size={{ xs: 12, sm: 6 }}
+              size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
               sx={{ cursor: 'pointer' }}
             >
               <PostCard

@@ -41,14 +41,18 @@ const PostCard = (props: PostCardProps) => {
           sx={{
             position: 'relative',
             width: '100%',
-            height: 210,
+            height: 240,
           }}
         >
           <Image
             src={props.image}
             alt=""
             fill
-            style={{ width: '100%', height: '100%' }}
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            sizes="(max-width: 600px) 85%, 
+            　　　　(max-width: 960px) 43%　
+            　　　　(max-width: 1280px) 28%, 
+            　　　　21%"
           />
         </Box>
       </Link>
@@ -57,7 +61,7 @@ const PostCard = (props: PostCardProps) => {
         <Box
           sx={{
             position: 'absolute',
-            top: 165,
+            top: 200,
             left: 10,
             display: 'flex',
             alignItems: 'center',
