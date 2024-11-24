@@ -113,10 +113,10 @@ const EditMyPage = () => {
     setIsLoading(true)
     const formData = new FormData()
     if (data.image) {
-      formData.append('image', data.image)
+      formData.append('user[image]', data.image)
     }
-    formData.append('name', data.name)
-    formData.append('bio', data.bio)
+    formData.append('user[name]', data.name)
+    formData.append('user[bio]', data.bio)
 
     axios
       .patch(updateUserUrl(id), formData, {
@@ -127,18 +127,18 @@ const EditMyPage = () => {
       })
       .then(() => {
         setNotification({
-          message: 'プロフィール編集が成功しました。',
+          message: '編集が成功しました。',
           severity: 'info',
-          pathname: '/',
+          pathname: `/my-page/${id}`,
         })
         router.push(`/my-page/${id}`)
       })
       .catch((err) => {
         console.log(err)
         setNotification({
-          message: 'プロフィール編集に失敗しました。',
+          message: '編集に失敗しました。',
           severity: 'error',
-          pathname: '/',
+          pathname: `/my-page/${id}`,
         })
         router.push(`/my-page/${id}`)
       })
