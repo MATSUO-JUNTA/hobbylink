@@ -74,7 +74,7 @@ const Footer = () => {
               checkUserLogin('/notifications')
               break
             case 4:
-              checkUserLogin('/my-page')
+              checkUserLogin(`/my-page/${session?.user.id}`)
               break
           }
         }}

@@ -101,6 +101,11 @@ class Api::V1::PostsController < ApplicationController
     render json: posts.page(params[:page]).per(10), each_serializer: PostCardSerializer, status: :ok
   end
 
+  def user_posts
+    posts = User.includes(:posts).find(params[:id]).posts
+    render json: posts, each_serializer: UserPostSerializer, status: :ok
+  end
+
   private
 
   # 商品追加処理
