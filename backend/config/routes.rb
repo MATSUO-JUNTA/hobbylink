@@ -6,6 +6,11 @@ Rails.application.routes.draw do
     namespace :v1 do
       post "auth/:provider/callback", to: "users#create"
       get "api_check", to: "api_check#index"
+      resources :users, only: [:show, :update] do
+        member do
+          get "user_posts", to: "posts#user_posts"
+        end
+      end
       resources :posts, only: [:create, :show, :edit, :update, :destroy] do
         collection do
           get "new_posts"

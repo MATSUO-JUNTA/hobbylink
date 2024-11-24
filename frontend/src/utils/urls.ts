@@ -39,3 +39,10 @@ export const searchPostsUrl = `${HOST_API_URL}/posts/search`
 // 商品取得URL（GET）
 export const getProductByIdUrl = (id: string) =>
   `${HOST_API_URL}/products/${id}`
+
+// ユーザー取得URL（GET）
+export const getUserByIdUrl = (id: string) => `${HOST_API_URL}/users/${id}`
+
+// ユーザー投稿URL（GET）
+export const getUserPostsUrl = (id: string) =>
+  `${HOST_API_URL}/users/${id}/user_posts`

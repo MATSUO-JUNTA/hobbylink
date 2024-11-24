@@ -1,6 +1,11 @@
 require 'open-uri'
 
 class Api::V1::UsersController < ApplicationController
+  def show
+    user = User.find(params[:id])
+    render json: user, serializer: ShowUserSerializer, status: :ok
+  end
+
   def create
     user = User.find_or_create_by(email: user_params[:email], provider: user_params[:provider]) do |new_user|
       new_user.name = user_params[:name]
