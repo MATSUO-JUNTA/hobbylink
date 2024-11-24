@@ -46,3 +46,6 @@ export const getUserByIdUrl = (id: string) => `${HOST_API_URL}/users/${id}`
 // ユーザー投稿URL（GET）
 export const getUserPostsUrl = (id: string) =>
   `${HOST_API_URL}/users/${id}/user_posts`
+
+// ユーザー更新用URL（PATCH）
+export const updateUserUrl = (id: string) => `${HOST_API_URL}/users/${id}`

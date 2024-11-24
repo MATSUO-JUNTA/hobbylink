@@ -106,7 +106,7 @@ const MyPage = () => {
         {data.bio}
       </Typography>
       {Number(session?.user.id) == data.id ? (
-        <Link href="/my-page/edit">
+        <Link href={`/my-page/${id}/edit`}>
           <Button
             variant="contained"
             sx={{ width: '100%', backgroundColor: 'black', py: 1.1, mb: 3 }}
