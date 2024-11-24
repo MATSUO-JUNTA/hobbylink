@@ -1,6 +1,8 @@
 require 'open-uri'
 
 class Api::V1::UsersController < ApplicationController
+  before_action :authenticate, only: [:update]
+
   def show
     user = User.find(params[:id])
     render json: user, serializer: ShowUserSerializer, status: :ok
@@ -18,6 +20,14 @@ class Api::V1::UsersController < ApplicationController
       render json: user, serializer: UserSerializer, token:, status: :ok
     else
       render json: { error: 'ログインに失敗しました' }, status: :unprocessable_entity
+    end
+  end
+
+  def update
+    if @current_user.update(user_params)
+      head :ok
+    else
+      render json: { error: 'プロフィール編集に失敗しました' }, status: :unprocessable_entity
     end
   end
 
