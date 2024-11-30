@@ -18,7 +18,7 @@ import MyPagePosts from '../../components/MyPagePosts'
 import Error from '@/app/components/Error'
 import Loading from '@/app/components/Loading'
 import { fetcher } from '@/utils/fetcher'
-import { getUserByIdUrl, getUserPostsUrl } from '@/utils/urls'
+import { getUserByIdUrl, getUserPostsUrl, getLikePostsUrl } from '@/utils/urls'
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -139,7 +139,7 @@ const MyPage = () => {
         <MyPagePosts apiUrl={getUserPostsUrl(id)} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <MyPagePosts apiUrl="" />
+        <MyPagePosts apiUrl={getLikePostsUrl(id)} />
       </TabPanel>
     </Container>
   )

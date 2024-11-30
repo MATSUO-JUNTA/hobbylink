@@ -28,6 +28,8 @@ type PostProps = {
   image: string
   content: string
   createdAt: string
+  likeCount: number
+  isLiked: boolean
   user: {
     id: number
     name: string
@@ -139,6 +141,8 @@ const PostSearchResults = () => {
                       userId={post.user.id}
                       userName={post.user.name}
                       userImage={post.user.image}
+                      likeCount={post.likeCount}
+                      isLiked={post.isLiked}
                     />
                   </Grid>
                 ))}

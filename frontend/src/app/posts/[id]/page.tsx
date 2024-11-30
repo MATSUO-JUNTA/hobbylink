@@ -30,6 +30,7 @@ import useSWR from 'swr'
 import Error from '@/app/components/Error'
 import Loading from '@/app/components/Loading'
 import NavigationHeader from '@/app/components/NavigationHeader'
+import PostActions from '@/app/components/PostActions'
 import ProductCard from '@/app/components/ProductCard'
 import { NotificationContext } from '@/contexts/NotificationContext'
 import { fetcher } from '@/utils/fetcher'
@@ -40,6 +41,8 @@ type Post = {
   image: string
   content: string
   createdAt: string
+  likeCount: number
+  isLiked: boolean
   user: {
     id: number
     image: string
@@ -115,7 +118,10 @@ const PostDetail = () => {
       })
   }
 
-  const { data, error } = useSWR(id ? getPostByIdUrl(id) : null, fetcher)
+  const { data, error } = useSWR(
+    id && session ? [getPostByIdUrl(id), session.user.token] : null,
+    ([url, token]) => fetcher(url, token as string),
+  )
 
   if (error) return <Error />
   if (!data) return <Loading />
@@ -272,10 +278,17 @@ const PostDetail = () => {
             <Typography variant="body2" sx={{ mb: 1 }}>
               {post.content}
             </Typography>
-            <Typography variant="body2" sx={{ mb: 3, color: '#666666' }}>
+            <Typography variant="body2" sx={{ mb: 1, color: '#666666' }}>
               {post.category.name}
             </Typography>
-            <Typography variant="body2" sx={{ mb: 2, fontWeight: 'bold' }}>
+
+            <PostActions
+              id={id}
+              isLiked={post.isLiked}
+              likeCount={post.likeCount}
+            />
+
+            <Typography variant="body2" sx={{ my: 2, fontWeight: 'bold' }}>
               おすすめ商品
             </Typography>
             <Grid container spacing={2} sx={{ mb: 5 }}>

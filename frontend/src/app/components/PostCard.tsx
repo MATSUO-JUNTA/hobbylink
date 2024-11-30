@@ -1,20 +1,14 @@
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'
-import FavoriteIcon from '@mui/icons-material/Favorite'
-import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined'
-import ShareIcon from '@mui/icons-material/Share'
 import {
   Card,
   CardContent,
   CardActions,
   Typography,
-  IconButton,
   Avatar,
   Box,
 } from '@mui/material'
-import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import PostActions from './PostActions'
 
 type PostCardProps = {
   id: number
@@ -24,16 +18,11 @@ type PostCardProps = {
   userId: number
   userName: string
   userImage: string
+  likeCount: number
+  isLiked: boolean
 }
 
 const PostCard = (props: PostCardProps) => {
-  const [isLike, setIsLike] = useState(false)
-
-  const handleLike = () => {
-    setIsLike(!isLike)
-  }
-  const handleShare = () => {}
-
   return (
     <Card sx={{ position: 'relative' }}>
       <Link href={`/posts/${props.id}`}>
@@ -50,9 +39,9 @@ const PostCard = (props: PostCardProps) => {
             fill
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             sizes="(max-width: 600px) 85%, 
-            　　　　(max-width: 960px) 43%　
-            　　　　(max-width: 1280px) 28%, 
-            　　　　21%"
+                  (max-width: 960px) 43%
+                  (max-width: 1280px) 28%, 
+                  21%"
           />
         </Box>
       </Link>
@@ -89,13 +78,13 @@ const PostCard = (props: PostCardProps) => {
             {props.createdAt}
           </Typography>
           <Typography
-            variant="body2"
             sx={{
               display: '-webkit-box',
               overflow: 'hidden',
               WebkitBoxOrient: 'vertical',
               WebkitLineClamp: 2,
               mt: 0.5,
+              fontSize: 13.5,
             }}
           >
             {props.content}
@@ -103,43 +92,12 @@ const PostCard = (props: PostCardProps) => {
         </CardContent>
       </Link>
 
-      <CardActions
-        disableSpacing
-        sx={{ display: 'flex', justifyContent: 'space-between' }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', color: '#666666' }}>
-          <IconButton sx={{ width: 25 }} onClick={handleLike}>
-            <motion.div
-              whileTap={{
-                scale: 1.6,
-              }}
-              initial={{ scale: 1 }}
-              style={{ display: 'flex', alignItems: 'center' }}
-            >
-              {isLike ? (
-                <FavoriteIcon sx={{ color: 'red', fontSize: 21.7 }} />
-              ) : (
-                <FavoriteBorderOutlinedIcon sx={{ fontSize: 21.7 }} />
-              )}
-            </motion.div>
-          </IconButton>
-
-          <Typography component="span" variant="body2" sx={{ mr: 1.2 }}>
-            {100}
-          </Typography>
-
-          <Link href={`/posts/${props.id}`}>
-            <IconButton sx={{ width: 25 }}>
-              <ChatBubbleOutlineIcon fontSize="small" />
-            </IconButton>
-            <Typography component="span" variant="body2">
-              {100}
-            </Typography>
-          </Link>
-        </Box>
-        <IconButton onClick={handleShare}>
-          <ShareIcon fontSize="small" />
-        </IconButton>
+      <CardActions>
+        <PostActions
+          id={props.id.toString()}
+          isLiked={props.isLiked}
+          likeCount={props.likeCount}
+        />
       </CardActions>
     </Card>
   )

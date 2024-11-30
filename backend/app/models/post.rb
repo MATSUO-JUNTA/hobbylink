@@ -24,6 +24,8 @@ class Post < ApplicationRecord
   belongs_to :category
   has_many :post_products, dependent: :destroy
   has_many :products, through: :post_products
+  has_many :likes, dependent: :destroy
+  has_many :users, through: :likes
 
   validates :content, presence: true, length: { maximum: 500 }
 
