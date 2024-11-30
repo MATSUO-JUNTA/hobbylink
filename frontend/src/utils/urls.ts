@@ -47,5 +47,12 @@ export const getUserByIdUrl = (id: string) => `${HOST_API_URL}/users/${id}`
 export const getUserPostsUrl = (id: string) =>
   `${HOST_API_URL}/users/${id}/user_posts`
 
+// ユーザーいいね投稿URL（GET）
+export const getLikePostsUrl = (id: string) =>
+  `${HOST_API_URL}/users/${id}/like_posts`
+
 // ユーザー更新用URL（PATCH）
 export const updateUserUrl = (id: string) => `${HOST_API_URL}/users/${id}`
+
+// いいね、いいね解除URL（POST、DELETE）
+export const likeUrl = (id: string) => `${HOST_API_URL}/posts/${id}/likes`

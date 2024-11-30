@@ -2,10 +2,20 @@ require 'open-uri'
 
 class Api::V1::PostsController < ApplicationController
   before_action :authenticate, only: [:create, :edit, :update, :destroy]
+  before_action :current_user, only: [:show, :new_posts, :search]
   before_action :set_post, only: [:update, :destroy]
 
   def show
-    posts = Post.includes(:user, :category, :products).find(params[:id])
+    posts = Post.includes(:user, :category, :products)
+                .left_joins(:likes)
+                .group('posts.id')
+                .select("posts.*,
+                        COUNT(likes.id) AS like_count,
+                        EXISTS (
+                          SELECT * FROM likes
+                          WHERE likes.post_id = posts.id AND likes.user_id = #{@current_user ? @current_user.id : 0}
+                        ) AS is_liked")
+                .find(params[:id])
     render json: posts, status: :ok
   end
 
@@ -81,12 +91,30 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def new_posts
-    posts = Post.includes(:user).order(created_at: :desc).page(params[:page]).per(10)
+    posts = Post.includes(:user)
+                .left_joins(:likes)
+                .group('posts.id')
+                .select("posts.*,
+                        COUNT(likes.id) AS like_count,
+                        EXISTS (
+                          SELECT * FROM likes
+                          WHERE likes.post_id = posts.id AND likes.user_id = #{@current_user ? @current_user.id : 0}
+                        ) AS is_liked")
+                .order(created_at: :desc)
+                .page(params[:page]).per(10)
     render json: posts, each_serializer: PostCardSerializer, status: :ok
   end
 
   def search
     posts = Post.includes(:user)
+                .left_joins(:likes)
+                .group('posts.id')
+                .select("posts.*,
+                        COUNT(likes.id) AS like_count,
+                        EXISTS (
+                          SELECT * FROM likes
+                          WHERE likes.post_id = posts.id AND likes.user_id = #{@current_user ? @current_user.id : 0}
+                        ) AS is_liked")
 
     posts = if params[:search_term].present?
               posts.joins(:category).where(
@@ -103,6 +131,11 @@ class Api::V1::PostsController < ApplicationController
 
   def user_posts
     posts = User.includes(:posts).find(params[:id]).posts
+    render json: posts, each_serializer: UserPostSerializer, status: :ok
+  end
+
+  def like_posts
+    posts = User.includes(likes: :post).find(params[:id]).likes.map(&:post)
     render json: posts, each_serializer: UserPostSerializer, status: :ok
   end
 

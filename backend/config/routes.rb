@@ -9,9 +9,11 @@ Rails.application.routes.draw do
       resources :users, only: [:show, :update] do
         member do
           get "user_posts", to: "posts#user_posts"
+          get "like_posts", to: "posts#like_posts"
         end
       end
       resources :posts, only: [:create, :show, :edit, :update, :destroy] do
+        resource :likes, only: [:create, :destroy]
         collection do
           get "new_posts"
           get "search"

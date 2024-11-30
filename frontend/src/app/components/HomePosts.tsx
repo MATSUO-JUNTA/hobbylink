@@ -3,6 +3,7 @@
 import { Box } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import camelcaseKeys from 'camelcase-keys'
+import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
 import { useInView } from 'react-intersection-observer'
 import useSWRInfinite from 'swr/infinite'
@@ -20,6 +21,8 @@ type PostProps = {
   image: string
   content: string
   createdAt: string
+  likeCount: number
+  isLiked: boolean
   user: {
     id: number
     name: string
@@ -28,9 +31,10 @@ type PostProps = {
 }
 
 const HomePosts = ({ url }: HomePostsProps) => {
+  const { data: session } = useSession()
   const { data, error, size, setSize, isValidating } = useSWRInfinite(
     (pageIndex, previousPageData) => getKey(pageIndex, previousPageData, url),
-    fetcher,
+    (url) => fetcher(url, session?.user.token),
   )
 
   const { ref, inView } = useInView()
@@ -68,6 +72,8 @@ const HomePosts = ({ url }: HomePostsProps) => {
                 userId={post.user.id}
                 userName={post.user.name}
                 userImage={post.user.image}
+                likeCount={post.likeCount}
+                isLiked={post.isLiked}
               />
             </Grid>
           ))}
