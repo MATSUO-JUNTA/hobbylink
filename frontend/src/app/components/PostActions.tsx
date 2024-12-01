@@ -14,6 +14,7 @@ type PostActionsProps = {
   id: string
   isLiked: boolean
   likeCount: number
+  commentCount: number
 }
 
 const PostActions = (props: PostActionsProps) => {
@@ -67,12 +68,12 @@ const PostActions = (props: PostActionsProps) => {
           </Typography>
         </Box>
 
-        <Link href={`/posts/${props.id}`}>
+        <Link href={`/posts/${props.id}/comments`}>
           <IconButton sx={{ width: 25 }}>
             <ChatBubbleOutlineIcon sx={{ fontSize: 18.5 }} />
           </IconButton>
           <Typography component="span" sx={{ fontSize: 13.5 }}>
-            {100}
+            {props.commentCount}
           </Typography>
         </Link>
       </Box>

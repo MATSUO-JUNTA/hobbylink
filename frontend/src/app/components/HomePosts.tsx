@@ -23,6 +23,7 @@ type PostProps = {
   createdAt: string
   likeCount: number
   isLiked: boolean
+  commentCount: number
   user: {
     id: number
     name: string
@@ -74,6 +75,7 @@ const HomePosts = ({ url }: HomePostsProps) => {
                 userImage={post.user.image}
                 likeCount={post.likeCount}
                 isLiked={post.isLiked}
+                commentCount={post.commentCount}
               />
             </Grid>
           ))}

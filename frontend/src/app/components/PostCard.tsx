@@ -20,6 +20,7 @@ type PostCardProps = {
   userImage: string
   likeCount: number
   isLiked: boolean
+  commentCount: number
 }
 
 const PostCard = (props: PostCardProps) => {
@@ -97,6 +98,7 @@ const PostCard = (props: PostCardProps) => {
           id={props.id.toString()}
           isLiked={props.isLiked}
           likeCount={props.likeCount}
+          commentCount={props.commentCount}
         />
       </CardActions>
     </Card>

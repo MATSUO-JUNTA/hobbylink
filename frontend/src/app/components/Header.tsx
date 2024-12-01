@@ -44,6 +44,7 @@ const Header = () => {
   const pathname = usePathname()
   const isPathMatch =
     /\/posts\/\d+$/.test(pathname) ||
+    /\/posts\/\d+\/comments$/.test(pathname) ||
     /\/product\/\d+$/.test(pathname) ||
     /\/my-page\/\d+\/edit$/.test(pathname)
 

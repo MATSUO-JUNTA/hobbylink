@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: products
+#
+#  id          :bigint           not null, primary key
+#  details     :text
+#  name        :string           not null
+#  price       :decimal(, )      not null
+#  product_url :string           not null
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
 class ProductSerializer < ApplicationSerializer
   include Rails.application.routes.url_helpers
 
