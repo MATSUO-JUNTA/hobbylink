@@ -44,6 +44,10 @@ const Footer = () => {
     }
   }
 
+  const isPathMatch = /\/posts\/\d+\/comments$/.test(pathname)
+
+  if (isPathMatch) return <></>
+
   return (
     <Box
       sx={{

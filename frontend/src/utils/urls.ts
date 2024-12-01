@@ -56,3 +56,6 @@ export const updateUserUrl = (id: string) => `${HOST_API_URL}/users/${id}`
 
 // いいね、いいね解除URL（POST、DELETE）
 export const likeUrl = (id: string) => `${HOST_API_URL}/posts/${id}/likes`
+
+// コメントURL（GET、POST）
+export const commentUrl = (id: string) => `${HOST_API_URL}/posts/${id}/comments`

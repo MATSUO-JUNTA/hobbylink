@@ -14,6 +14,7 @@ import {
 import Grid from '@mui/material/Grid2'
 import camelcaseKeys from 'camelcase-keys'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
 import { useInView } from 'react-intersection-observer'
 import useSWRInfinite from 'swr/infinite'
@@ -30,6 +31,7 @@ type PostProps = {
   createdAt: string
   likeCount: number
   isLiked: boolean
+  commentCount: number
   user: {
     id: number
     name: string
@@ -38,6 +40,7 @@ type PostProps = {
 }
 
 const PostSearchResults = () => {
+  const { data: session } = useSession()
   const router = useRouter()
   const searchParams = useSearchParams()
   const { ref, inView } = useInView()
@@ -48,7 +51,7 @@ const PostSearchResults = () => {
       (searchParams.get('searchTerm')
         ? `search_term=${searchParams.get('searchTerm')}`
         : `category_id=${searchParams.get('categoryId')}`),
-    fetcher,
+    (url) => fetcher(url, session?.user.token),
   )
 
   const handleSearch = (searchTerm: string) => {
@@ -143,6 +146,7 @@ const PostSearchResults = () => {
                       userImage={post.user.image}
                       likeCount={post.likeCount}
                       isLiked={post.isLiked}
+                      commentCount={post.commentCount}
                     />
                   </Grid>
                 ))}

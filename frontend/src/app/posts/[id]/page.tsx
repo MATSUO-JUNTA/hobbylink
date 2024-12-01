@@ -43,6 +43,7 @@ type Post = {
   createdAt: string
   likeCount: number
   isLiked: boolean
+  commentCount: number
   user: {
     id: number
     image: string
@@ -286,6 +287,7 @@ const PostDetail = () => {
               id={id}
               isLiked={post.isLiked}
               likeCount={post.likeCount}
+              commentCount={post.commentCount}
             />
 
             <Typography variant="body2" sx={{ my: 2, fontWeight: 'bold' }}>
