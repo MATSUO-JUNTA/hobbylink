@@ -24,15 +24,19 @@ const PostActions = (props: PostActionsProps) => {
 
   const handleLike = async () => {
     const method = isLike ? 'delete' : 'post'
-    const res = await axios({
-      method: method,
-      url: likeUrl(props.id.toString()),
-      headers: {
-        'auth-token': session?.user.token,
-      },
-    })
-    setIsLike(!isLike)
-    setLikeCount(res.data)
+    try {
+      const res = await axios({
+        method: method,
+        url: likeUrl(props.id.toString()),
+        headers: {
+          'auth-token': session?.user.token,
+        },
+      })
+      setIsLike(!isLike)
+      setLikeCount(res.data)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const handleShare = () => {}
