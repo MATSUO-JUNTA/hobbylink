@@ -18,6 +18,7 @@ Rails.application.routes.draw do
         collection do
           get "new_posts"
           get "search"
+          get "recommended_posts"
         end
       end
       resources :categories, only: [:index]

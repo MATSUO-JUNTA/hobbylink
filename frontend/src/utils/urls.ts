@@ -33,6 +33,9 @@ export const deletePostUrl = (id: string) => `${HOST_API_URL}/posts/${id}`
 // 新着投稿取得用URL（GET）
 export const newPostsUrl = `${HOST_API_URL}/posts/new_posts`
 
+// おすすめ投稿取得用URL（GET）
+export const recommendedPostsUrl = `${HOST_API_URL}/posts/recommended_posts`
+
 // 投稿検索用URL（GET）
 export const searchPostsUrl = `${HOST_API_URL}/posts/search`
 
