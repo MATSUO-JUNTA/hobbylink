@@ -62,3 +62,7 @@ export const likeUrl = (id: string) => `${HOST_API_URL}/posts/${id}/likes`
 
 // コメントURL（GET、POST）
 export const commentUrl = (id: string) => `${HOST_API_URL}/posts/${id}/comments`
+
+// フォローURL （POST, DELETE）
+export const followUrl = (id: string) =>
+  `${HOST_API_URL}/users/${id}/relationships`

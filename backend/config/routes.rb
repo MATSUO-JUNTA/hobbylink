@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       post "auth/:provider/callback", to: "users#create"
       get "api_check", to: "api_check#index"
       resources :users, only: [:show, :update] do
+        resource :relationships, only: [:create, :destroy]
         member do
           get "user_posts", to: "posts#user_posts"
           get "like_posts", to: "posts#like_posts"

@@ -120,7 +120,7 @@ const PostDetail = () => {
   }
 
   const { data, error } = useSWR(
-    id && session ? [getPostByIdUrl(id), session.user.token] : null,
+    id ? [getPostByIdUrl(id), session?.user?.token] : null,
     ([url, token]) => fetcher(url, token as string),
   )
 

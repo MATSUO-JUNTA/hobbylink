@@ -2,9 +2,22 @@ require 'open-uri'
 
 class Api::V1::UsersController < ApplicationController
   before_action :authenticate, only: [:update]
+  before_action :current_user, only: [:show]
 
   def show
-    user = User.find(params[:id])
+    user = User.left_joins(:active_relationships, :passive_relationships)
+               .group('users.id')
+               .select(
+                 "users.*,
+                    COUNT(DISTINCT relationships.followed_id) AS follower_count,
+                    COUNT(DISTINCT passive_relationships_users.follower_id) AS followed_count,
+                    EXISTS(
+                      SELECT * FROM relationships WHERE
+                      relationships.follower_id = users.id
+                      AND relationships.followed_id = #{@current_user ? @current_user.id : 0}
+                    ) AS is_following"
+               )
+               .find(params[:id])
     render json: user, serializer: ShowUserSerializer, status: :ok
   end
 

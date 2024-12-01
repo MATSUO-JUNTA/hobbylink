@@ -9,16 +9,23 @@ import {
   Tab,
   Tabs,
 } from '@mui/material'
+import axios from 'axios'
+import camelcaseKeys from 'camelcase-keys'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { useState } from 'react'
-import useSWR from 'swr'
+import useSWR, { mutate } from 'swr'
 import MyPagePosts from '../../components/MyPagePosts'
 import Error from '@/app/components/Error'
 import Loading from '@/app/components/Loading'
 import { fetcher } from '@/utils/fetcher'
-import { getUserByIdUrl, getUserPostsUrl, getLikePostsUrl } from '@/utils/urls'
+import {
+  getUserByIdUrl,
+  getUserPostsUrl,
+  getLikePostsUrl,
+  followUrl,
+} from '@/utils/urls'
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -31,6 +38,9 @@ type user = {
   name: string
   image: string
   bio: string
+  followerCount: number
+  followedCount: number
+  isFollowing: boolean
 }
 
 function TabPanel(props: TabPanelProps) {
@@ -55,17 +65,39 @@ const MyPage = () => {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
   }
-  const { data, error } = useSWR<user>(getUserByIdUrl(id), fetcher)
+
+  const handleFollow = async () => {
+    const method = user.isFollowing ? 'delete' : 'post'
+    try {
+      await axios({
+        method: method,
+        url: followUrl(id),
+        headers: {
+          'auth-token': session?.user.token,
+        },
+      })
+      mutate([getUserByIdUrl(id), session?.user?.token])
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const { data, error } = useSWR(
+    id ? [getUserByIdUrl(id), session?.user?.token] : null,
+    ([url, token]) => fetcher(url, token as string),
+  )
 
   if (error) return <Error />
   if (!data) return <Loading />
+
+  const user: user = camelcaseKeys(data)
 
   return (
     <Container maxWidth="sm" sx={{ mt: 5, mb: 10 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
         <Avatar src={data.image} sx={{ width: 80, height: 80, mr: 2 }} />
         <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-          {data.name}
+          {user.name}
         </Typography>
       </Box>
       <Box sx={{ display: 'flex', mb: 2 }}>
@@ -75,7 +107,7 @@ const MyPage = () => {
             component="span"
             sx={{ fontWeight: 'bold', mr: 0.3 }}
           >
-            {100}
+            {user.followedCount}
           </Typography>
           <Typography
             variant="body2"
@@ -91,7 +123,7 @@ const MyPage = () => {
             component="span"
             sx={{ fontWeight: 'bold', mr: 0.3 }}
           >
-            {100}
+            {user.followerCount}
           </Typography>
           <Typography
             variant="body2"
@@ -121,10 +153,10 @@ const MyPage = () => {
           <Button
             variant="contained"
             sx={{ width: '100%', backgroundColor: 'black', py: 1.1, mb: 3 }}
-            // onClick={}
+            onClick={handleFollow}
           >
             <Typography sx={{ color: 'white', fontSize: 12 }}>
-              フォロー
+              {user.isFollowing ? 'フォロー中' : 'フォロー'}
             </Typography>
           </Button>
         )
