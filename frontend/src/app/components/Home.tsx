@@ -3,7 +3,7 @@
 import { Tab, Tabs, Box } from '@mui/material'
 import { useState } from 'react'
 import HomePosts from './HomePosts'
-import { newPostsUrl } from '@/utils/urls'
+import { newPostsUrl, recommendedPostsUrl } from '@/utils/urls'
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -56,7 +56,7 @@ const Home = () => {
         <HomePosts url={newPostsUrl} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <HomePosts url="" />
+        <HomePosts url={recommendedPostsUrl} />
       </TabPanel>
     </>
   )

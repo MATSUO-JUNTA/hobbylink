@@ -2,7 +2,7 @@ require 'open-uri'
 
 class Api::V1::PostsController < ApplicationController
   before_action :authenticate, only: [:create, :edit, :update, :destroy]
-  before_action :current_user, only: [:show, :new_posts, :search]
+  before_action :current_user, only: [:show, :new_posts, :search, :recommended_posts]
   before_action :set_post, only: [:update, :destroy]
 
   def show
@@ -92,33 +92,17 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def new_posts
-    posts = Post.includes(:user)
-                .left_joins(:likes, :comments)
-                .group('posts.id')
-                .select("posts.*,
-                        COUNT(DISTINCT likes.id) AS like_count,
-                        COUNT(comments.id) AS comment_count,
-                        EXISTS (
-                          SELECT * FROM likes
-                          WHERE likes.post_id = posts.id AND likes.user_id = #{@current_user ? @current_user.id : 0}
-                        ) AS is_liked")
-                .order(created_at: :desc)
-                .page(params[:page]).per(10)
+    posts = retrieve_posts.order(created_at: :desc).page(params[:page]).per(10)
+    render json: posts, each_serializer: PostCardSerializer, status: :ok
+  end
+
+  def recommended_posts
+    posts = retrieve_posts.order(like_count: :desc, comment_count: :desc).page(params[:page]).per(10)
     render json: posts, each_serializer: PostCardSerializer, status: :ok
   end
 
   def search
-    posts = Post.includes(:user)
-                .left_joins(:likes, :comments)
-                .group('posts.id')
-                .select("posts.*,
-                        COUNT(DISTINCT likes.id) AS like_count,
-                        COUNT(comments.id) AS comment_count,
-                        EXISTS (
-                          SELECT * FROM likes
-                          WHERE likes.post_id = posts.id AND likes.user_id = #{@current_user ? @current_user.id : 0}
-                        ) AS is_liked")
-
+    posts = retrieve_posts
     posts = if params[:search_term].present?
               posts.joins(:category).where(
                 'posts.content LIKE ? or categories.name LIKE ?',
@@ -183,6 +167,19 @@ class Api::V1::PostsController < ApplicationController
 
   def set_post
     @post = @current_user.posts.find(params[:id])
+  end
+
+  def retrieve_posts
+    Post.includes(:user)
+        .left_joins(:likes, :comments)
+        .group('posts.id')
+        .select("posts.*,
+                        COUNT(DISTINCT likes.id) AS like_count,
+                        COUNT(comments.id) AS comment_count,
+                        EXISTS (
+                          SELECT * FROM likes
+                          WHERE likes.post_id = posts.id AND likes.user_id = #{@current_user ? @current_user.id : 0}
+                        ) AS is_liked")
   end
 
   def post_params
