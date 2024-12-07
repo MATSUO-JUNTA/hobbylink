@@ -21,4 +21,12 @@
 class Relationship < ApplicationRecord
   belongs_to :follower, class_name: 'User'
   belongs_to :followed, class_name: 'User'
+
+  after_create :create_notification
+
+  private
+
+  def create_notification
+    Notification.create_notification(nil, follower, followed, :new_follower)
+  end
 end

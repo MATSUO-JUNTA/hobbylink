@@ -24,4 +24,12 @@ class Comment < ApplicationRecord
   belongs_to :post
 
   validates :content, presence: true
+
+  after_create :create_notification
+
+  private
+
+  def create_notification
+    Notification.create_notification(post, post.user, user, :new_comment)
+  end
 end
