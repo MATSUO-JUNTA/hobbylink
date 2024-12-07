@@ -1,5 +1,5 @@
 class Api::V1::NotificationsController < ApplicationController
-  before_action :authenticate
+  before_action :authenticate, only: [:index, :update]
 
   def index
     notifications = @current_user.notifications.includes(:notified_by)
@@ -7,7 +7,7 @@ class Api::V1::NotificationsController < ApplicationController
   end
 
   def update
-    notification = Notification.find(params[:id])
+    notification = @current_user.notifications.find(params[:id])
     if notification.update(read: true)
       head :ok
     else
