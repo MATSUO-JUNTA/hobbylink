@@ -28,6 +28,7 @@ class User < ApplicationRecord
                                    foreign_key: 'followed_id',
                                    dependent: :destroy,
                                    inverse_of: :followed
+  has_many :notifications, dependent: :destroy
 
   validates :name,      presence: true
   validates :email,     presence: true, uniqueness: true
