@@ -4,6 +4,6 @@ class NotificationUserSerializer < ApplicationSerializer
   attributes :id, :image, :name
 
   def image
-    object.image.attached? ? rails_blob_url(object.image) : nil
+    object.image.attached? ? rails_blob_url(object.image, host: UrlHost.host) : nil
   end
 end

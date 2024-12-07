@@ -66,3 +66,10 @@ export const commentUrl = (id: string) => `${HOST_API_URL}/posts/${id}/comments`
 // フォローURL （POST, DELETE）
 export const followUrl = (id: string) =>
   `${HOST_API_URL}/users/${id}/relationships`
+
+// お知らせ取得URL（GET）
+export const getNotificationUrl = `${HOST_API_URL}/notifications`
+
+// お知らせ更新URL（PATCH）
+export const updateNotificationUrl = (id: string) =>
+  `${HOST_API_URL}/notifications/${id}`
