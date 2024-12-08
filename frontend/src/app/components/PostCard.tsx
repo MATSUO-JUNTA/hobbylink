@@ -96,6 +96,7 @@ const PostCard = (props: PostCardProps) => {
       <CardActions>
         <PostActions
           id={props.id.toString()}
+          content={props.content}
           isLiked={props.isLiked}
           likeCount={props.likeCount}
           commentCount={props.commentCount}

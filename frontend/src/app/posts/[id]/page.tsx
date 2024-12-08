@@ -285,6 +285,7 @@ const PostDetail = () => {
 
             <PostActions
               id={id}
+              content={post.content}
               isLiked={post.isLiked}
               likeCount={post.likeCount}
               commentCount={post.commentCount}
