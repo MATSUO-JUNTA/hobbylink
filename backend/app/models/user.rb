@@ -14,7 +14,6 @@
 #
 #  index_users_on_email               (email) UNIQUE
 #  index_users_on_email_and_provider  (email,provider) UNIQUE
-#  index_users_on_provider            (provider) UNIQUE
 #
 class User < ApplicationRecord
   has_many :posts, dependent: :destroy
@@ -34,7 +33,7 @@ class User < ApplicationRecord
   validates :email,     presence: true, uniqueness: true
   validates :image,     presence: true
   validates :bio,       length: { maximum: 200 }
-  validates :provider,  presence: true, uniqueness: true
+  validates :provider,  presence: true
 
   has_one_attached :image
 
