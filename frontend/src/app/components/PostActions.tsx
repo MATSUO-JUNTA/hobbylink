@@ -1,26 +1,36 @@
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined'
-import ShareIcon from '@mui/icons-material/Share'
 import { Typography, IconButton, Box } from '@mui/material'
 import axios from 'axios'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { useState } from 'react'
+import {
+  LineShareButton,
+  LineIcon,
+  XIcon,
+  TwitterShareButton,
+  FacebookIcon,
+  FacebookShareButton,
+} from 'react-share'
 import { likeUrl } from '@/utils/urls'
 
 type PostActionsProps = {
   id: string
+  content: string
   isLiked: boolean
   likeCount: number
   commentCount: number
 }
+const buttonStyle = { marginRight: 11 }
 
 const PostActions = (props: PostActionsProps) => {
   const { data: session } = useSession()
   const [isLike, setIsLike] = useState(props.isLiked)
   const [likeCount, setLikeCount] = useState(props.likeCount)
+  const shareUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/posts/${props.id}`
 
   const handleLike = async () => {
     const method = isLike ? 'delete' : 'post'
@@ -38,8 +48,6 @@ const PostActions = (props: PostActionsProps) => {
       console.log(err)
     }
   }
-
-  const handleShare = () => {}
 
   return (
     <Box
@@ -81,9 +89,25 @@ const PostActions = (props: PostActionsProps) => {
           </Typography>
         </Link>
       </Box>
-      <IconButton onClick={handleShare}>
-        <ShareIcon fontSize="small" />
-      </IconButton>
+      <Box sx={{ mt: 0.5, mr: 0.7 }}>
+        <FacebookShareButton
+          title={props.content}
+          url={shareUrl}
+          style={buttonStyle}
+        >
+          <FacebookIcon size={25} round />
+        </FacebookShareButton>
+        <TwitterShareButton
+          title={props.content}
+          url={shareUrl}
+          style={buttonStyle}
+        >
+          <XIcon size={25} round />
+        </TwitterShareButton>
+        <LineShareButton title={props.content} url={shareUrl}>
+          <LineIcon size={25} round />
+        </LineShareButton>
+      </Box>
     </Box>
   )
 }
