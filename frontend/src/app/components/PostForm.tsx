@@ -23,7 +23,7 @@ import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { useContext, useEffect, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import useSWR from 'swr'
+import useSWR, { mutate } from 'swr'
 import { z } from 'zod'
 import Error from '../components/Error'
 import Loading from '../components/Loading'
@@ -32,7 +32,12 @@ import ValidationMessage from '../components/ValidationMessage'
 import { FormContext, Form } from '@/contexts/FormContext'
 import { NotificationContext } from '@/contexts/NotificationContext'
 import { fetcher } from '@/utils/fetcher'
-import { categoriesUrl, createPostUrl, updatePostUrl } from '@/utils/urls'
+import {
+  categoriesUrl,
+  createPostUrl,
+  updatePostUrl,
+  editPostUrl,
+} from '@/utils/urls'
 
 type postFormProps = {
   postId?: string
@@ -66,7 +71,7 @@ const MenuProps = {
 
 const PostForm = ({ postId }: postFormProps) => {
   const [isLoading, setIsLoading] = useState(false)
-  const { formData, setField, resetFormData } = useContext(FormContext)
+  const { formData, setField } = useContext(FormContext)
   const router = useRouter()
   const { setNotification } = useContext(NotificationContext)
   const { data: session } = useSession()
@@ -87,7 +92,7 @@ const PostForm = ({ postId }: postFormProps) => {
           name: z.string(),
           details: z.string(),
           price: z.number(),
-          image: z.string(),
+          image: z.string().optional(),
           productUrl: z.string(),
         }),
       )
@@ -143,7 +148,9 @@ const PostForm = ({ postId }: postFormProps) => {
           severity: 'info',
           pathname: '/',
         })
-        resetFormData()
+        if (postId) {
+          mutate(editPostUrl(postId))
+        }
         router.push('/')
       })
       .catch((err) => {

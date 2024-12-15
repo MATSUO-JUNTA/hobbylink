@@ -44,7 +44,7 @@ const Header = () => {
   const pathname = usePathname()
   const isPathMatch =
     /\/posts\/\d+$/.test(pathname) ||
-    /\/posts\/\d+\/comments$/.test(pathname) ||
+    /\/posts\/\d+\/(comments|edit)$/.test(pathname) ||
     /\/product\/\d+$/.test(pathname) ||
     /\/my-page\/\d+\/edit$/.test(pathname)
 
@@ -62,7 +62,13 @@ const Header = () => {
       >
         <Toolbar sx={{ justifyContent: 'space-between' }}>
           <Link href="/">
-            <Image src="/logo.png" alt="logo" width={85} height={35} priority />
+            <Image
+              src="/logo.svg"
+              alt="logo"
+              width={100}
+              height={45}
+              priority
+            />
           </Link>
           {session && session.user ? (
             <Box sx={{ flexGrow: 0 }}>

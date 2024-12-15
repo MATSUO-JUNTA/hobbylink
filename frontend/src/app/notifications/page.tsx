@@ -60,7 +60,7 @@ const Notifications = () => {
 
   return (
     <List>
-      {notifications &&
+      {notifications ? (
         notifications.map((notification) => (
           <Box
             key={notification.id}
@@ -128,7 +128,12 @@ const Notifications = () => {
               sx={{ m: 0, width: '100%' }}
             />
           </Box>
-        ))}
+        ))
+      ) : (
+        <Typography variant="body2" sx={{ mt: 2, textAlign: 'center' }}>
+          お知らせは見つかりませんでした。
+        </Typography>
+      )}
     </List>
   )
 }

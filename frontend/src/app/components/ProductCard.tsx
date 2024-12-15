@@ -7,7 +7,7 @@ type ProductCardProps = {
   id: string
   name: string
   price: number
-  image: string
+  image: string | undefined
   selected: boolean
   deletable: boolean
 }
@@ -26,13 +26,15 @@ const ProductCard = (props: ProductCardProps) => {
         }}
       >
         <Box sx={{ position: 'relative', width: '100%', height: 125 }}>
-          <Image
-            src={props.image}
-            alt={props.name}
-            fill
-            style={{ width: '100%', height: '100%' }}
-            sizes="(max-width: 600px) 50vw, (max-width: 1200px) 33vw, 25vw"
-          />
+          {props.image && (
+            <Image
+              src={props.image}
+              alt=""
+              fill
+              style={{ width: '100%', height: '100%' }}
+              sizes="(max-width: 600px) 50vw, (max-width: 1200px) 33vw, 25vw"
+            />
+          )}
         </Box>
         <CardContent sx={{ height: 75, pt: 1 }}>
           <Typography

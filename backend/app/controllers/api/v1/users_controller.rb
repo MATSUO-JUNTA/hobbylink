@@ -9,12 +9,12 @@ class Api::V1::UsersController < ApplicationController
                .group('users.id')
                .select(
                  "users.*,
-                    COUNT(DISTINCT relationships.followed_id) AS follower_count,
-                    COUNT(DISTINCT passive_relationships_users.follower_id) AS followed_count,
+                    COUNT(DISTINCT relationships.followed_id) AS followed_count,
+                    COUNT(DISTINCT passive_relationships_users.follower_id) AS follower_count,
                     EXISTS(
                       SELECT * FROM relationships WHERE
-                      relationships.follower_id = users.id
-                      AND relationships.followed_id = #{@current_user ? @current_user.id : 0}
+                      relationships.follower_id = #{@current_user ? @current_user.id : 0}
+                      AND relationships.followed_id = users.id
                     ) AS is_following"
                )
                .find(params[:id])
