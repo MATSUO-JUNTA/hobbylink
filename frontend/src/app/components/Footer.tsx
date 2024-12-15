@@ -11,30 +11,41 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { useRouter, usePathname } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { useEffect, useState, useContext } from 'react'
+import { useState, useContext, useEffect, useRef } from 'react'
 import LoginModal from './LoginModal'
 import { FormContext } from '@/contexts/FormContext'
-
-const getInitValue = (pathname: string) => {
-  if (pathname === '/') return 0
-  if (pathname.startsWith('/search')) return 1
-  if (pathname.startsWith('/posts')) return 2
-  if (pathname.startsWith('/notifications')) return 3
-  if (pathname.startsWith('/my-page')) return 4
-  return 0
-}
 
 const Footer = () => {
   const router = useRouter()
   const pathname = usePathname()
-  const [value, setValue] = useState(getInitValue(pathname))
+  const [value, setValue] = useState(0)
   const { resetFormData } = useContext(FormContext)
   const [open, setOpen] = useState<boolean>(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const { data: session } = useSession()
+  const prevPathname = useRef(pathname)
+  const resetDone = useRef(false)
 
-  useEffect(() => setValue(getInitValue(pathname)), [pathname])
+  useEffect(() => {
+    const prev = prevPathname.current
+    const skipReset =
+      (prev === '/posts/search' && pathname === '/posts') ||
+      (prev === '/posts' && pathname === '/posts/search') ||
+      (prev === '/posts/search' && /\/posts\/\d+\/edit$/.test(pathname)) ||
+      (/\/posts\/\d+\/edit$/.test(prev) && pathname === '/posts/search')
+
+    if (prev !== pathname) {
+      resetDone.current = false
+      prevPathname.current = pathname
+    } else {
+      resetDone.current = true
+    }
+
+    if (!skipReset && !resetDone.current) {
+      resetFormData()
+    }
+  }, [pathname, resetFormData])
 
   const checkUserLogin = (path: string) => {
     if (session?.user) {
@@ -62,8 +73,7 @@ const Footer = () => {
         showLabels
         value={value}
         onChange={(event, newValue) => {
-          resetFormData()
-
+          setValue(newValue)
           switch (newValue) {
             case 0:
               router.push('/')
