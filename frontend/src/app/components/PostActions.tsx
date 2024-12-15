@@ -24,7 +24,7 @@ type PostActionsProps = {
   likeCount: number
   commentCount: number
 }
-const buttonStyle = { marginRight: 11 }
+const buttonStyle = { marginRight: 11, borderRadius: '50%' }
 
 const PostActions = (props: PostActionsProps) => {
   const { data: session } = useSession()
@@ -59,28 +59,32 @@ const PostActions = (props: PostActionsProps) => {
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', color: '#666666' }}>
-        <Box sx={{ mb: 0.1 }}>
-          <IconButton sx={{ width: 25 }} onClick={handleLike}>
-            <motion.div
-              whileTap={{
-                scale: 1.6,
-              }}
-              initial={{ scale: 1 }}
-              style={{ display: 'flex', alignItems: 'center' }}
-            >
-              {isLike ? (
-                <FavoriteIcon sx={{ color: 'red', fontSize: 20 }} />
-              ) : (
-                <FavoriteBorderOutlinedIcon sx={{ fontSize: 20 }} />
-              )}
-            </motion.div>
-          </IconButton>
-          <Typography component="span" sx={{ mr: 1, fontSize: 13.5 }}>
-            {likeCount}
-          </Typography>
-        </Box>
+        <IconButton sx={{ width: 25 }} onClick={handleLike}>
+          <motion.div
+            whileTap={{
+              scale: 1.6,
+            }}
+            initial={{ scale: 1 }}
+            style={{ display: 'flex', alignItems: 'center' }}
+          >
+            {isLike ? (
+              <FavoriteIcon sx={{ color: 'red', fontSize: 20 }} />
+            ) : (
+              <FavoriteBorderOutlinedIcon sx={{ fontSize: 20 }} />
+            )}
+          </motion.div>
+        </IconButton>
+        <Typography component="span" sx={{ mr: 1, fontSize: 13.5 }}>
+          {likeCount}
+        </Typography>
 
-        <Link href={`/posts/${props.id}/comments`}>
+        <Link
+          href={`/posts/${props.id}/comments`}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
           <IconButton sx={{ width: 25 }}>
             <ChatBubbleOutlineIcon sx={{ fontSize: 18.5 }} />
           </IconButton>
@@ -104,7 +108,11 @@ const PostActions = (props: PostActionsProps) => {
         >
           <XIcon size={25} round />
         </TwitterShareButton>
-        <LineShareButton title={props.content} url={shareUrl}>
+        <LineShareButton
+          title={props.content}
+          url={shareUrl}
+          style={{ borderRadius: '50%' }}
+        >
           <LineIcon size={25} round />
         </LineShareButton>
       </Box>
