@@ -75,7 +75,7 @@ const LoginModal = ({ open, handleClose }: LoginModalProps) => {
         >
           <CloseIcon fontSize="inherit" />
         </IconButton>
-        <Image src="/logo.png" alt="logo" width={120} height={45} />
+        <Image src="/logo.svg" alt="logo" width={135} height={50} />
         <Typography
           sx={{
             textAlign: 'center',
