@@ -25,7 +25,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import useSWR from 'swr'
 import Error from '@/app/components/Error'
 import Loading from '@/app/components/Loading'
@@ -119,13 +119,17 @@ const PostDetail = () => {
       })
   }
 
-  const { data, error } = useSWR(
-    id ? [getPostByIdUrl(id), session?.user?.token] : null,
-    ([url, token]) => fetcher(url, token as string),
+  const { data, error, isValidating, mutate } = useSWR(
+    id ? getPostByIdUrl(id) : null,
+    (url) => fetcher(url, session?.user?.token),
   )
 
+  useEffect(() => {
+    mutate(undefined, { revalidate: true })
+  }, [mutate])
+
   if (error) return <Error />
-  if (!data) return <Loading />
+  if (isValidating && !data) return <Loading />
 
   const post: Post = camelcaseKeys(data)
 
@@ -142,13 +146,19 @@ const PostDetail = () => {
             px: 0,
           }}
         >
-          <Box sx={{ width: '100%', aspectRatio: '1 / 0.8', mb: 2.5 }}>
+          <Box
+            sx={{
+              position: 'relative',
+              width: '100%',
+              aspectRatio: '1 / 1.1',
+              mb: 2.5,
+            }}
+          >
             <Image
               src={post.image}
               alt={post.user.name}
-              width={300}
-              height={300}
-              style={{ width: '100%', height: '100%' }}
+              fill
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           </Box>
           <Box

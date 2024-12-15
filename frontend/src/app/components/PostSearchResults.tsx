@@ -44,7 +44,7 @@ const PostSearchResults = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { ref, inView } = useInView()
-  const { data, error, isValidating, size, setSize } = useSWRInfinite(
+  const { data, error, isValidating, size, setSize, mutate } = useSWRInfinite(
     (pageIndex, previousPageData) =>
       getKey(pageIndex, previousPageData, searchPostsUrl) +
       '&' +
@@ -58,6 +58,10 @@ const PostSearchResults = () => {
     const params = new URLSearchParams({ searchTerm: searchTerm })
     router.push(`/search/search-results?${params}`)
   }
+
+  useEffect(() => {
+    mutate(undefined, { revalidate: true })
+  }, [mutate])
 
   useEffect(() => {
     if (

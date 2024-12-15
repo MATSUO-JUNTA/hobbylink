@@ -33,12 +33,16 @@ type PostProps = {
 
 const HomePosts = ({ url }: HomePostsProps) => {
   const { data: session } = useSession()
-  const { data, error, size, setSize, isValidating } = useSWRInfinite(
+  const { data, error, size, setSize, isValidating, mutate } = useSWRInfinite(
     (pageIndex, previousPageData) => getKey(pageIndex, previousPageData, url),
     (url) => fetcher(url, session?.user.token),
   )
 
   const { ref, inView } = useInView()
+
+  useEffect(() => {
+    mutate(undefined, { revalidate: true })
+  }, [url, mutate])
 
   useEffect(() => {
     if (
