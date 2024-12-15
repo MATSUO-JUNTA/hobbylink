@@ -81,9 +81,12 @@ const ProductDetail = () => {
               color: 'white',
               width: '100%',
               mb: 5,
+              py: 1.1,
             }}
           >
-            <Typography variant="body2"> 購入サイトへ</Typography>
+            <Typography sx={{ color: 'white', fontSize: 12 }}>
+              購入サイトへ
+            </Typography>
           </Button>
           <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 2 }}>
             関連する投稿

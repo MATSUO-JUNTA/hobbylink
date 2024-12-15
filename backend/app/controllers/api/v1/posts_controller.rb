@@ -11,7 +11,7 @@ class Api::V1::PostsController < ApplicationController
                 .group('posts.id')
                 .select("posts.*,
                         COUNT(DISTINCT likes.id) AS like_count,
-                        COUNT(comments.id) AS comment_count,
+                        COUNT(DISTINCT comments.id) AS comment_count,
                         EXISTS (
                           SELECT * FROM likes
                           WHERE likes.post_id = posts.id AND likes.user_id = #{@current_user ? @current_user.id : 0}
@@ -175,7 +175,7 @@ class Api::V1::PostsController < ApplicationController
         .group('posts.id')
         .select("posts.*,
                         COUNT(DISTINCT likes.id) AS like_count,
-                        COUNT(comments.id) AS comment_count,
+                        COUNT(DISTINCT comments.id) AS comment_count,
                         EXISTS (
                           SELECT * FROM likes
                           WHERE likes.post_id = posts.id AND likes.user_id = #{@current_user ? @current_user.id : 0}
