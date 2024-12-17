@@ -38,7 +38,7 @@ class Api::V1::UsersController < ApplicationController
 
   def update
     if @current_user.update(user_params)
-      head :ok
+      render json: @current_user, status: :ok
     else
       render json: { error: 'プロフィール編集に失敗しました' }, status: :unprocessable_entity
     end

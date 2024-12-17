@@ -87,8 +87,25 @@ const authOptions: NextAuthOptions = {
         return false
       }
     },
-    async jwt({ token, user }: { token: JWT; user: User }) {
-      if (user) {
+    async jwt({
+      token,
+      user,
+      trigger,
+      session,
+    }: {
+      token: JWT
+      user: User
+      trigger?: string
+      session?: { name: string; bio: string; image: string }
+    }) {
+      if (trigger === 'update' && session) {
+        token = {
+          ...token,
+          name: session.name,
+          bio: session.bio,
+          image: session.image,
+        }
+      } else if (user) {
         token = {
           ...token,
           ...user,

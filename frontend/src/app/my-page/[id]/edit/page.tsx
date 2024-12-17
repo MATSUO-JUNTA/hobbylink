@@ -15,7 +15,7 @@ import { useRouter, useParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState, useContext } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import useSWR from 'swr'
+import useSWR, { mutate } from 'swr'
 import { z } from 'zod'
 import Error from '@/app/components/Error'
 import Loading from '@/app/components/Loading'
@@ -55,7 +55,7 @@ const fontStyle = { fontSize: 13, color: '#666666', mt: 4, mb: 1 }
 
 const EditMyPage = () => {
   const [isLoading, setIsLoading] = useState(false)
-  const { data: session } = useSession()
+  const { data: session, update } = useSession()
   const { setNotification } = useContext(NotificationContext)
   const router = useRouter()
   const { id } = useParams<{ id: string }>()
@@ -99,14 +99,16 @@ const EditMyPage = () => {
   })
 
   useEffect(() => {
-    if (data?.image) {
-      imageFetcher(data.image).then((file) => {
+    if (data) {
+      imageFetcher(data?.image).then((file) => {
         if (file) {
           setValue('image', file)
         }
       })
+      setValue('name', data.name)
+      setValue('bio', data.bio)
     }
-  }, [data?.image, setValue])
+  }, [data, setValue])
 
   const onSubmit = (data: form) => {
     // ローディング開始
@@ -125,13 +127,18 @@ const EditMyPage = () => {
           'auth-token': session?.user.token,
         },
       })
-      .then(() => {
+      .then((res) => {
         setNotification({
           message: '編集が成功しました。',
           severity: 'info',
           pathname: `/my-page/${id}`,
         })
-        router.push(`/my-page/${id}`)
+        update({
+          name: res.data.name,
+          bio: res.data.bio,
+          image: res.data.image,
+        })
+        mutate(getUserByIdUrl(id))
       })
       .catch((err) => {
         console.log(err)
@@ -140,11 +147,11 @@ const EditMyPage = () => {
           severity: 'error',
           pathname: `/my-page/${id}`,
         })
-        router.push(`/my-page/${id}`)
       })
       .finally(() => {
         // ローディング終了
         setIsLoading(false)
+        router.push(`/my-page/${id}`)
       })
   }
 
