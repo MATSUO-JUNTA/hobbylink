@@ -59,8 +59,8 @@ const Notifications = () => {
   const notifications: Notification[] = camelcaseKeys(data)
 
   return (
-    <List>
-      {notifications ? (
+    <List sx={{ py: 0 }}>
+      {notifications.length > 0 ? (
         notifications.map((notification) => (
           <Box
             key={notification.id}
@@ -70,7 +70,7 @@ const Notifications = () => {
           >
             <ListItem
               alignItems="flex-start"
-              sx={{ width: '100%' }}
+              sx={{ width: '100%', py: 0 }}
               onClick={() => {
                 if (!notification.read) {
                   handleSetNotificationRead(notification.id)
@@ -98,7 +98,7 @@ const Notifications = () => {
                       variant="body2"
                       sx={{
                         overflowWrap: 'break-word',
-                        mb: 0.2,
+                        mb: 0.5,
                       }}
                     >
                       <Typography
@@ -111,7 +111,7 @@ const Notifications = () => {
                       さんが
                       {notification.notificationType === 'フォロー'
                         ? 'あなたをフォローしました。'
-                        : `あなたを投稿に${notification.notificationType}しました。`}
+                        : `あなたの投稿に${notification.notificationType}しました。`}
                     </Typography>
                   }
                   secondary={
