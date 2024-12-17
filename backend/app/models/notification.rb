@@ -31,8 +31,10 @@ class Notification < ApplicationRecord
   enum :notification_type, { new_comment: 0, new_like: 1, new_follower: 2 }
 
   def self.create_notification(post = nil, user, notified_by, notification_type)
-    # 同一ユーザーの場合は通知を作成しない
-    return if user == notified_by
+    # 同一ユーザー、コメント以外の登録済の通知の場合は通知を作成しない
+    return if user == notified_by ||
+              (notification_type != :new_comment &&
+               exists?(post:, user:, notified_by:, notification_type:))
 
     create(post:, user:, notified_by:, notification_type:, read: false)
   end

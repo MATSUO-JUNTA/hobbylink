@@ -27,6 +27,6 @@ class Relationship < ApplicationRecord
   private
 
   def create_notification
-    Notification.create_notification(nil, follower, followed, :new_follower)
+    Notification.create_notification(nil, followed, follower, :new_follower)
   end
 end
