@@ -174,11 +174,13 @@ const PostDetail = () => {
               }}
             >
               <Box sx={{ display: 'flex', mb: 2 }}>
-                <Avatar
-                  src={post.user.image}
-                  alt={post.user.name}
-                  sx={{ mr: 1.5 }}
-                />
+                <Link href={`/my-page/${post.user.id}`}>
+                  <Avatar
+                    src={post.user.image}
+                    alt={post.user.name}
+                    sx={{ mr: 1.5 }}
+                  />
+                </Link>
                 <Box>
                   <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                     {post.user.name}
