@@ -31,7 +31,7 @@ const ProductCard = (props: ProductCardProps) => {
               src={props.image}
               alt=""
               fill
-              style={{ width: '100%', height: '100%' }}
+              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
               sizes="(max-width: 600px) 50vw, (max-width: 1200px) 33vw, 25vw"
             />
           )}

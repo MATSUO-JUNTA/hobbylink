@@ -48,14 +48,16 @@ const ProductDetail = () => {
           px: 0,
         }}
       >
-        <Box sx={{ width: '100%', aspectRatio: '1 / 0.7', mb: 3 }}>
-          <Image
-            src={product.image}
-            alt={product.name}
-            width={300}
-            height={300}
-            style={{ width: '100%', height: '100%' }}
-          />
+        <Box sx={{ width: '100%', aspectRatio: '1 / 1', mb: 3 }}>
+          {product.image && (
+            <Image
+              src={product.image || ''}
+              alt={product.name}
+              width={300}
+              height={300}
+              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+            />
+          )}
         </Box>
         <Box sx={{ width: '94%', m: '0 auto' }}>
           <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 0.7 }}>
