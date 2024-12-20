@@ -16,6 +16,7 @@ import {
 } from '@mui/material'
 import axios from 'axios'
 import camelcaseKeys from 'camelcase-keys'
+import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { useForm, Controller } from 'react-hook-form'
@@ -88,9 +89,11 @@ const Comments = () => {
         {comments.map((comment) => (
           <List key={comment.id} sx={{ p: 0, m: 0 }}>
             <ListItem alignItems="flex-start" sx={{ width: '100%', pl: 0 }}>
-              <ListItemAvatar>
-                <Avatar alt={comment.user.name} src={comment.user.image} />
-              </ListItemAvatar>
+              <Link href={`/my-page/${comment.user.id}`}>
+                <ListItemAvatar>
+                  <Avatar alt={comment.user.name} src={comment.user.image} />
+                </ListItemAvatar>
+              </Link>
               <ListItemText
                 primary={
                   <>
