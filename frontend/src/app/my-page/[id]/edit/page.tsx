@@ -158,6 +158,11 @@ const EditMyPage = () => {
   if (error) return <Error />
   if (!data) return <Loading />
 
+  if (!session || session.user.id.toString() !== id) {
+    router.push('/not-found')
+    return null
+  }
+
   return (
     <>
       {isLoading ? (
