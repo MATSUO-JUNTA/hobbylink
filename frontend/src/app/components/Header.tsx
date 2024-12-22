@@ -46,7 +46,7 @@ const Header = () => {
     /\/posts\/\d+$/.test(pathname) ||
     /\/posts\/\d+\/(comments|edit)$/.test(pathname) ||
     /\/product\/\d+$/.test(pathname) ||
-    /\/my-page\/\d+\/edit$/.test(pathname)
+    /\/my-page\/\d+\/(edit|following|followers)$/.test(pathname)
 
   if (isPathMatch || hiddenPathnames.includes(pathname)) return <></>
 

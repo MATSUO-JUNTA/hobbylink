@@ -73,3 +73,11 @@ export const getNotificationUrl = `${HOST_API_URL}/notifications`
 // お知らせ更新URL（PATCH）
 export const updateNotificationUrl = (id: string) =>
   `${HOST_API_URL}/notifications/${id}`
+
+// フォロワー取得URL（GET）
+export const getFollowersUrl = (id: string) =>
+  `${HOST_API_URL}/users/${id}/followers`
+
+// フォロー中取得URL（GET）
+export const getFollowingUrl = (id: string) =>
+  `${HOST_API_URL}/users/${id}/following`

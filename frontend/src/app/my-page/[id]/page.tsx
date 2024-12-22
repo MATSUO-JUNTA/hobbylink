@@ -101,38 +101,42 @@ const MyPage = () => {
         </Typography>
       </Box>
       <Box sx={{ display: 'flex', mb: 2 }}>
-        <Box>
-          <Typography
-            variant="body2"
-            component="span"
-            sx={{ fontWeight: 'bold', mr: 0.3 }}
-          >
-            {user.followedCount}
-          </Typography>
-          <Typography
-            variant="body2"
-            component="span"
-            sx={{ color: '#666666', mr: 1 }}
-          >
-            フォロー中
-          </Typography>
-        </Box>
-        <Box>
-          <Typography
-            variant="body2"
-            component="span"
-            sx={{ fontWeight: 'bold', mr: 0.3 }}
-          >
-            {user.followerCount}
-          </Typography>
-          <Typography
-            variant="body2"
-            component="span"
-            sx={{ color: '#666666' }}
-          >
-            フォロワー
-          </Typography>
-        </Box>
+        <Link href={`/my-page/${id}/following`}>
+          <Box>
+            <Typography
+              variant="body2"
+              component="span"
+              sx={{ fontWeight: 'bold', mr: 0.3 }}
+            >
+              {user.followedCount}
+            </Typography>
+            <Typography
+              variant="body2"
+              component="span"
+              sx={{ color: '#666666', mr: 1 }}
+            >
+              フォロー中
+            </Typography>
+          </Box>
+        </Link>
+        <Link href={`/my-page/${id}/followers`}>
+          <Box>
+            <Typography
+              variant="body2"
+              component="span"
+              sx={{ fontWeight: 'bold', mr: 0.3 }}
+            >
+              {user.followerCount}
+            </Typography>
+            <Typography
+              variant="body2"
+              component="span"
+              sx={{ color: '#666666' }}
+            >
+              フォロワー
+            </Typography>
+          </Box>
+        </Link>
       </Box>
       <Typography variant="body2" sx={{ overflowWrap: 'break-word', mb: 3 }}>
         {data.bio}

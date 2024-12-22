@@ -1,6 +1,6 @@
 class Api::V1::RelationshipsController < ApplicationController
   before_action :authenticate, only: [:create, :destroy]
-  before_action :set_user, only: [:create, :destroy]
+  before_action :set_user, only: [:create, :destroy, :following, :followers]
 
   def create
     if @current_user.follow(@user)
@@ -18,9 +18,19 @@ class Api::V1::RelationshipsController < ApplicationController
     end
   end
 
+  def following
+    following = @user.followings
+    render json: following, each_serializer: RelationshipSerializer, status: :ok
+  end
+
+  def followers
+    followers = @user.followers
+    render json: followers, each_serializer: RelationshipSerializer, status: :ok
+  end
+
   private
 
   def set_user
-    @user = User.find(params[:user_id])
+    @user = User.find(params[:id])
   end
 end
