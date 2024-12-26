@@ -14,7 +14,7 @@ import camelcaseKeys from 'camelcase-keys'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import useSWR, { mutate } from 'swr'
 import MyPagePosts from '../../components/MyPagePosts'
 import Error from '@/app/components/Error'
@@ -62,11 +62,15 @@ const MyPage = () => {
   const [value, setValue] = useState(0)
   const { id } = useParams<{ id: string }>()
   const { data: session } = useSession()
+  const isLoading = useRef(false)
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
   }
 
   const handleFollow = async () => {
+    if (isLoading.current) return
+    isLoading.current = true
+
     const method = user.isFollowing ? 'delete' : 'post'
     try {
       await axios({
@@ -76,9 +80,11 @@ const MyPage = () => {
           'auth-token': session?.user.token,
         },
       })
-      mutate([getUserByIdUrl(id), session?.user?.token])
+      await mutate([getUserByIdUrl(id), session?.user?.token])
     } catch (err) {
       console.log(err)
+    } finally {
+      isLoading.current = false
     }
   }
 

@@ -6,7 +6,7 @@ import axios from 'axios'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import {
   LineShareButton,
   LineIcon,
@@ -31,8 +31,12 @@ const PostActions = (props: PostActionsProps) => {
   const [isLike, setIsLike] = useState(props.isLiked)
   const [likeCount, setLikeCount] = useState(props.likeCount)
   const shareUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/posts/${props.id}`
+  const isLoading = useRef<boolean>(false)
 
   const handleLike = async () => {
+    if (isLoading.current) return
+    isLoading.current = true
+
     const method = isLike ? 'delete' : 'post'
     try {
       const res = await axios({
@@ -46,6 +50,8 @@ const PostActions = (props: PostActionsProps) => {
       setLikeCount(res.data)
     } catch (err) {
       console.log(err)
+    } finally {
+      isLoading.current = false
     }
   }
 
