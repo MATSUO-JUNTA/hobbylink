@@ -178,8 +178,8 @@ const Comments = () => {
       <NavigationHeader title="コメント一覧" />
       <Container>
         {comments.map((comment) => (
-          <>
-            <List key={comment.id} sx={{ p: 0, m: 0 }}>
+          <Box key={comment.id}>
+            <List sx={{ p: 0, m: 0 }}>
               <ListItem alignItems="flex-start" sx={{ width: '100%', pl: 0 }}>
                 <Link href={`/my-page/${comment.user.id}`}>
                   <ListItemAvatar>
@@ -243,7 +243,7 @@ const Comments = () => {
                                   horizontal: 'right',
                                 }}
                                 open={Boolean(anchorElUser[comment.id])}
-                                onClose={handleCloseUserMenu}
+                                onClose={() => handleCloseUserMenu(comment.id)}
                               >
                                 <MenuItem
                                   sx={{
@@ -423,7 +423,7 @@ const Comments = () => {
                 </DialogActions>
               </form>
             </Dialog>
-          </>
+          </Box>
         ))}
       </Container>
       <form onSubmit={handleSubmit(onSubmit)}>

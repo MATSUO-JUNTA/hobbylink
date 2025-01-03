@@ -112,7 +112,13 @@ const Header = () => {
                       </Typography>
                     </MenuItem>
                   </Link>
-                  <MenuItem sx={menuItemStyle} onClick={() => signOut()}>
+                  <MenuItem
+                    sx={menuItemStyle}
+                    onClick={() => {
+                      signOut()
+                      localStorage.setItem('showMessage', 'false')
+                    }}
+                  >
                     <LogoutIcon />
                     <Typography sx={fontStyle}>ログアウト</Typography>
                   </MenuItem>
