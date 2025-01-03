@@ -32,7 +32,7 @@ type PostProps = {
 }
 
 const HomePosts = ({ url }: HomePostsProps) => {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const { data, error, size, setSize, isValidating, mutate } = useSWRInfinite(
     (pageIndex, previousPageData) => getKey(pageIndex, previousPageData, url),
     (url) => fetcher(url, session?.user.token),
@@ -41,8 +41,9 @@ const HomePosts = ({ url }: HomePostsProps) => {
   const { ref, inView } = useInView()
 
   useEffect(() => {
+    if (status === 'loading') return
     mutate(undefined, { revalidate: true })
-  }, [url, mutate])
+  }, [status, url, mutate])
 
   useEffect(() => {
     if (

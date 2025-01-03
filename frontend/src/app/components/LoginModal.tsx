@@ -9,8 +9,8 @@ import {
 } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
-import { signIn } from 'next-auth/react'
-import { useState, useContext } from 'react'
+import { signIn, useSession } from 'next-auth/react'
+import { useState, useContext, useEffect } from 'react'
 import { NotificationContext } from '@/contexts/NotificationContext'
 
 type LoginModalProps = {
@@ -37,32 +37,39 @@ const style = {
 const LoginModal = ({ open, handleClose }: LoginModalProps) => {
   const [isLoading, setIsLoading] = useState(false)
   const { setNotification } = useContext(NotificationContext)
+  const { status } = useSession()
 
-  const handleSignIn = (provider: string) => {
+  useEffect(() => {
+    const showMessage = localStorage.getItem('showMessage')
+
+    if (showMessage === 'false' && status === 'authenticated') {
+      setNotification({
+        message: 'ログインが成功しました。',
+        severity: 'info',
+        pathname: '/',
+      })
+      localStorage.setItem('showMessage', 'true')
+    }
+  }, [status, setNotification])
+
+  const handleSignIn = async (provider: string) => {
     // ローディング開始
     setIsLoading(true)
 
-    signIn(provider)
-      .then(() => {
-        setNotification({
-          message: 'ログインが成功しました。',
-          severity: 'info',
-          pathname: '/',
-        })
+    try {
+      await signIn(provider)
+    } catch (err) {
+      console.log(err)
+      setNotification({
+        message: 'ログインに失敗しました。',
+        severity: 'error',
+        pathname: '/',
       })
-      .catch((err) => {
-        console.log(err)
-        setNotification({
-          message: 'ログインに失敗しました。',
-          severity: 'error',
-          pathname: '/',
-        })
-      })
-      .finally(() => {
-        // ローディング終了
-        setIsLoading(false)
-        handleClose()
-      })
+    } finally {
+      // ローディング終了
+      setIsLoading(false)
+      handleClose()
+    }
   }
 
   return (
