@@ -48,7 +48,14 @@ const ProductDetail = () => {
           px: 0,
         }}
       >
-        <Box sx={{ width: '100%', aspectRatio: '1 / 1', mb: 3 }}>
+        <Box
+          sx={{
+            width: '100%',
+            aspectRatio: '1 / 1',
+            mb: 3,
+            backgroundColor: 'white',
+          }}
+        >
           {product.image && (
             <Image
               src={product.image || ''}
