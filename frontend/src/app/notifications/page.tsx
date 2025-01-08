@@ -59,7 +59,7 @@ const Notifications = () => {
   const notifications: Notification[] = camelcaseKeys(data)
 
   return (
-    <List sx={{ py: 0 }}>
+    <List sx={{ pt: 0, pb: '57px' }}>
       {notifications.length > 0 ? (
         notifications.map((notification) => (
           <Box
