@@ -64,7 +64,7 @@ const EditMyPage = () => {
       message: 'プロフィール画像は必須です',
     }),
     name: z.string().min(1, 'ユーザー名を入力してください。'),
-    bio: z.string().min(1, '自己紹介を入力してください。'),
+    bio: z.string().optional(),
   })
 
   const handleInputImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -247,9 +247,6 @@ const EditMyPage = () => {
                 />
               )}
             />
-            {errors.bio && errors.bio.message && (
-              <ValidationMessage message={errors.bio.message} />
-            )}
 
             <Button
               type="submit"
