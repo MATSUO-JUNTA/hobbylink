@@ -49,17 +49,22 @@ const FollowList = ({ type }: FollowListProps) => {
           data.map((following) => (
             <Box key={following.id}>
               <Link href={`/my-page/${following.id}`}>
-                <ListItem alignItems="flex-start" sx={{ width: '100%', py: 0 }}>
+                <ListItem
+                  alignItems="flex-start"
+                  sx={{
+                    width: '100%',
+                  }}
+                >
                   <ListItemAvatar>
                     <Avatar alt={following.name} src={following.image} />
                   </ListItemAvatar>
                   <ListItemText
                     primary={
                       <Typography
-                        variant="body2"
                         sx={{
                           overflowWrap: 'break-word',
-                          mb: 0.5,
+                          fontSize: 13.5,
+                          fontWeight: 'bold',
                         }}
                       >
                         {following.name}
