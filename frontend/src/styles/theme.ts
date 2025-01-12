@@ -82,6 +82,25 @@ const theme = createTheme({
         },
       },
     },
+    MuiListItemButton: {
+      styleOverrides: {
+        root: {
+          '&:hover': {
+            backgroundColor: 'white',
+          },
+          '&.Mui-selected': {
+            backgroundColor: 'white',
+            color: '#1E90FF',
+            '& .MuiListItemIcon-root': {
+              color: '#1E90FF',
+            },
+            '&:hover': {
+              backgroundColor: 'white',
+            },
+          },
+        },
+      },
+    },
   },
 })
 

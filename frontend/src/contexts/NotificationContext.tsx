@@ -60,15 +60,21 @@ const NotificationProvider = ({ children }: NotificationProviderProps) => {
           <Snackbar
             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             open={open}
-            autoHideDuration={2000}
+            autoHideDuration={8000}
             onClose={handleClose}
+            sx={{
+              left: { lg: '61%' },
+            }}
           >
             <Alert
               icon={<CheckIcon fontSize="inherit" />}
               severity={notification.severity}
               sx={{
-                width: 245,
+                width: 260,
                 height: 48,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
             >
               {notification.message}

@@ -51,102 +51,98 @@ const Header = () => {
   if (isPathMatch || hiddenPathnames.includes(pathname)) return <></>
 
   return (
-    <Box>
-      <AppBar
-        position="static"
-        elevation={0}
-        sx={{
-          backgroundColor: 'white',
-          borderBottom: '1px solid #E0E0E0',
-        }}
-      >
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
-          <Link href="/">
+    <AppBar
+      position="static"
+      elevation={0}
+      sx={{
+        backgroundColor: 'white',
+        borderBottom: '1px solid #E0E0E0',
+      }}
+    >
+      <Toolbar sx={{ justifyContent: 'space-between', pl: 0.2 }}>
+        <Link href="/">
+          <Box sx={{ display: { xs: 'block', lg: 'none' } }}>
             <Image
               src="/logo.svg"
               alt="logo"
-              width={100}
+              width={138}
               height={45}
               priority
             />
-          </Link>
-          {session && session.user ? (
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="メニューを開く">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar
-                    alt="user"
-                    src={session.user.image as string}
-                    sx={{ width: 33, height: 33 }}
-                  />
-                </IconButton>
-              </Tooltip>
-              <Paper>
-                <Menu
-                  sx={{ mt: '40px' }}
-                  id="menu-appbar"
-                  anchorEl={anchorElUser}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
-                >
-                  <Link href="/terms">
-                    <MenuItem onClick={handleCloseUserMenu} sx={menuItemStyle}>
-                      <DescriptionOutlinedIcon />
-                      <Typography sx={fontStyle}>利用規約</Typography>
-                    </MenuItem>
-                  </Link>
-                  <Link href="/privacy">
-                    <MenuItem sx={menuItemStyle}>
-                      <VerifiedUserOutlinedIcon />
-                      <Typography sx={fontStyle}>
-                        プライバシーポリシー
-                      </Typography>
-                    </MenuItem>
-                  </Link>
-                  <MenuItem
-                    sx={menuItemStyle}
-                    onClick={() => {
-                      signOut()
-                      localStorage.setItem('showMessage', 'false')
-                    }}
-                  >
-                    <LogoutIcon />
-                    <Typography sx={fontStyle}>ログアウト</Typography>
+          </Box>
+        </Link>
+        {session && session.user ? (
+          <Box sx={{ flexGrow: 0 }}>
+            <Tooltip title="メニューを開く">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Avatar
+                  alt="user"
+                  src={session.user.image as string}
+                  sx={{ width: 33, height: 33 }}
+                />
+              </IconButton>
+            </Tooltip>
+            <Paper>
+              <Menu
+                sx={{ mt: '40px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                <Link href="/terms">
+                  <MenuItem onClick={handleCloseUserMenu} sx={menuItemStyle}>
+                    <DescriptionOutlinedIcon />
+                    <Typography sx={fontStyle}>利用規約</Typography>
                   </MenuItem>
-                </Menu>
-              </Paper>
-            </Box>
-          ) : (
-            <Button
-              variant="contained"
-              startIcon={
-                <LoginIcon sx={{ marginRight: 0, fontSize: 'small' }} />
-              }
-              sx={{
-                width: 75,
-                height: 'auto',
-                padding: 0.5,
-                fontSize: 9,
-                fontWeight: 'bold',
-              }}
-              onClick={handleOpen}
-            >
-              ログイン
-            </Button>
-          )}
-          <LoginModal open={open} handleClose={handleClose} />
-        </Toolbar>
-      </AppBar>
-    </Box>
+                </Link>
+                <Link href="/privacy">
+                  <MenuItem sx={menuItemStyle}>
+                    <VerifiedUserOutlinedIcon />
+                    <Typography sx={fontStyle}>プライバシーポリシー</Typography>
+                  </MenuItem>
+                </Link>
+                <MenuItem
+                  sx={menuItemStyle}
+                  onClick={() => {
+                    signOut()
+                    localStorage.setItem('showMessage', 'false')
+                  }}
+                >
+                  <LogoutIcon />
+                  <Typography sx={fontStyle}>ログアウト</Typography>
+                </MenuItem>
+              </Menu>
+            </Paper>
+          </Box>
+        ) : (
+          <Button
+            variant="contained"
+            startIcon={<LoginIcon sx={{ marginRight: 0, fontSize: 'small' }} />}
+            sx={{
+              width: 75,
+              height: 'auto',
+              padding: 0.5,
+              fontSize: 9,
+              fontWeight: 'bold',
+            }}
+            onClick={handleOpen}
+          >
+            ログイン
+          </Button>
+        )}
+        <LoginModal open={open} handleClose={handleClose} />
+      </Toolbar>
+    </AppBar>
   )
 }
 
