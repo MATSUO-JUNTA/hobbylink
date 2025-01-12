@@ -67,7 +67,7 @@ const HomePosts = ({ url }: HomePostsProps) => {
           posts.map((post: PostProps) => (
             <Grid
               key={post.id}
-              size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
+              size={{ xs: 12, sm: 6, md: 4, xl: 3 }}
               sx={{ cursor: 'pointer' }}
             >
               <PostCard

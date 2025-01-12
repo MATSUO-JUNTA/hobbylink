@@ -249,6 +249,15 @@ const PostDetail = () => {
                         onClose={handleClose}
                         aria-labelledby="alert-dialog-title"
                         aria-describedby="alert-dialog-description"
+                        PaperProps={{
+                          sx: {
+                            position: 'absolute',
+                            top: '50%',
+                            left: { xs: '50%', lg: '60%' },
+                            transform: 'translate(-50%, -50%)',
+                            m: 0,
+                          },
+                        }}
                       >
                         <DialogContent
                           sx={{

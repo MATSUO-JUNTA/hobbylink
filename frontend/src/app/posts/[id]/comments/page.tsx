@@ -176,7 +176,7 @@ const Comments = () => {
   return (
     <>
       <NavigationHeader title="コメント一覧" />
-      <Container>
+      <Container sx={{ pb: '63px' }}>
         {comments.map((comment) => (
           <Box key={comment.id}>
             <List sx={{ p: 0, m: 0 }}>
@@ -284,6 +284,15 @@ const Comments = () => {
                                   onClose={handleClose}
                                   aria-labelledby="alert-dialog-title"
                                   aria-describedby="alert-dialog-description"
+                                  PaperProps={{
+                                    sx: {
+                                      position: 'absolute',
+                                      top: '50%',
+                                      left: { xs: '50%', lg: '60%' },
+                                      transform: 'translate(-50%, -50%)',
+                                      m: 0,
+                                    },
+                                  }}
                                 >
                                   <DialogContent
                                     sx={{
@@ -351,11 +360,15 @@ const Comments = () => {
             <Dialog
               open={editOpen}
               onClose={handleEditClose}
-              sx={{
-                '& .MuiDialog-paper': {
-                  width: 500,
+              PaperProps={{
+                sx: {
+                  width: { xs: 350, lg: 500 },
                   height: 180,
-                  mx: 2,
+                  m: 0,
+                  position: 'absolute',
+                  top: '50%',
+                  left: { xs: '50%', lg: '60%' },
+                  transform: 'translate(-50%, -50%)',
                 },
               }}
             >
@@ -400,13 +413,6 @@ const Comments = () => {
                 </DialogContent>
                 <DialogActions>
                   <Button
-                    type="submit"
-                    variant="contained"
-                    sx={{ width: '46%', height: 30, mr: 0.2 }}
-                  >
-                    保存
-                  </Button>
-                  <Button
                     variant="contained"
                     sx={{
                       width: '46%',
@@ -420,6 +426,13 @@ const Comments = () => {
                   >
                     キャンセル
                   </Button>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{ width: '46%', height: 30, mr: 0.2 }}
+                  >
+                    保存
+                  </Button>
                 </DialogActions>
               </form>
             </Dialog>
@@ -431,9 +444,9 @@ const Comments = () => {
           sx={{
             borderTop: '1px solid #E0E0E0',
             position: 'fixed',
-            left: 0,
+            left: { xs: 0, lg: '280px' },
             bottom: 0,
-            width: '100%',
+            width: { xs: '100%', lg: 'calc(100% - 280px)' },
             height: 64,
             backgroundColor: 'white',
             display: 'flex',

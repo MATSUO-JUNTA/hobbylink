@@ -21,7 +21,7 @@ type LoginModalProps = {
 const style = {
   position: 'absolute',
   top: '50%',
-  left: '50%',
+  left: { xs: '50%', lg: '61%' },
   transform: 'translate(-50%, -50%)',
   width: 350,
   bgcolor: 'background.paper',
@@ -82,7 +82,7 @@ const LoginModal = ({ open, handleClose }: LoginModalProps) => {
         >
           <CloseIcon fontSize="inherit" />
         </IconButton>
-        <Image src="/logo.svg" alt="logo" width={135} height={50} />
+        <Image src="/logo.svg" alt="logo" width={145} height={45} />
         <Typography
           sx={{
             textAlign: 'center',

@@ -2,8 +2,9 @@ import { CssBaseline } from '@mui/material'
 import { ThemeProvider } from '@mui/material/styles'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
 import type { Metadata } from 'next'
-import Footer from './components/Footer'
 import Header from './components/Header'
+import NavigationMenu from './components/NavigationMenu'
+import ResponsiveBox from './components/ResponsiveBox'
 import { FormProvider } from '@/contexts/FormContext'
 import { NotificationProvider } from '@/contexts/NotificationContext'
 import NextAuthProvider from '@/providers/NextAuth'
@@ -30,9 +31,11 @@ export default function RootLayout({
               <CssBaseline />
               <FormProvider>
                 <NotificationProvider>
-                  <Header />
-                  {children}
-                  <Footer />
+                  <NavigationMenu />
+                  <ResponsiveBox>
+                    <Header />
+                    {children}
+                  </ResponsiveBox>
                 </NotificationProvider>
               </FormProvider>
             </ThemeProvider>
