@@ -12,6 +12,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Check Heroku CLI existence (debug)
+        run: |
+          which heroku || echo "No heroku in PATH"
+          heroku --version || echo "Can't run heroku"
+
       - name: Deploy
         uses: gonuit/heroku-docker-deploy@v1.3.3
         with:
