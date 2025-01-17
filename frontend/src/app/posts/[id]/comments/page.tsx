@@ -37,6 +37,7 @@ import useSWR, { mutate } from 'swr'
 import { z } from 'zod'
 import Error from '@/app/components/Error'
 import Loading from '@/app/components/Loading'
+import LoginModal from '@/app/components/LoginModal'
 import NavigationHeader from '@/app/components/NavigationHeader'
 import { fetcher } from '@/utils/fetcher'
 import { commentUrl, commentDetailUrl } from '@/utils/urls'
@@ -90,6 +91,10 @@ const Comments = () => {
     setEditOpen(false)
   }
 
+  const [modalOpen, setModalOpen] = useState(false)
+  const handleModalOpen = () => setModalOpen(true)
+  const handleModalClose = () => setModalOpen(false)
+
   const [commentId, setCommentId] = useState<number>(0)
 
   const schema = z.object({
@@ -115,6 +120,11 @@ const Comments = () => {
   })
 
   const onSubmit = (data: form) => {
+    if (!session) {
+      handleModalOpen()
+      return
+    }
+
     axios
       .post(commentUrl(id), data, {
         headers: {
@@ -480,6 +490,7 @@ const Comments = () => {
           </Button>
         </Box>
       </form>
+      <LoginModal open={modalOpen} handleClose={handleModalClose} />
     </>
   )
 }

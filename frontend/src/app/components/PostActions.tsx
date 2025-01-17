@@ -15,6 +15,7 @@ import {
   FacebookIcon,
   FacebookShareButton,
 } from 'react-share'
+import LoginModal from './LoginModal'
 import { likeUrl } from '@/utils/urls'
 
 type PostActionsProps = {
@@ -27,6 +28,9 @@ type PostActionsProps = {
 const buttonStyle = { marginRight: 11, borderRadius: '50%' }
 
 const PostActions = (props: PostActionsProps) => {
+  const [open, setOpen] = useState(false)
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
   const { data: session } = useSession()
   const [isLike, setIsLike] = useState(props.isLiked)
   const [likeCount, setLikeCount] = useState(props.likeCount)
@@ -34,6 +38,11 @@ const PostActions = (props: PostActionsProps) => {
   const isLoading = useRef<boolean>(false)
 
   const handleLike = async () => {
+    if (!session) {
+      handleOpen()
+      return
+    }
+
     if (isLoading.current) return
     isLoading.current = true
 
@@ -56,73 +65,76 @@ const PostActions = (props: PostActionsProps) => {
   }
 
   return (
-    <Box
-      sx={{
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'space-between',
-        mx: 'auto',
-      }}
-    >
-      <Box sx={{ display: 'flex', alignItems: 'center', color: '#666666' }}>
-        <IconButton sx={{ width: 25 }} onClick={handleLike}>
-          <motion.div
-            whileTap={{
-              scale: 1.6,
-            }}
-            initial={{ scale: 1 }}
-            style={{ display: 'flex', alignItems: 'center' }}
-          >
-            {isLike ? (
-              <FavoriteIcon sx={{ color: 'red', fontSize: 20 }} />
-            ) : (
-              <FavoriteBorderOutlinedIcon sx={{ fontSize: 20 }} />
-            )}
-          </motion.div>
-        </IconButton>
-        <Typography component="span" sx={{ mr: 1, fontSize: 13.5 }}>
-          {likeCount}
-        </Typography>
-
-        <Link
-          href={`/posts/${props.id}/comments`}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
-          <IconButton sx={{ width: 25 }}>
-            <ChatBubbleOutlineIcon sx={{ fontSize: 18.5 }} />
+    <>
+      <Box
+        sx={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'space-between',
+          mx: 'auto',
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', color: '#666666' }}>
+          <IconButton sx={{ width: 25 }} onClick={handleLike}>
+            <motion.div
+              whileTap={{
+                scale: 1.6,
+              }}
+              initial={{ scale: 1 }}
+              style={{ display: 'flex', alignItems: 'center' }}
+            >
+              {isLike ? (
+                <FavoriteIcon sx={{ color: 'red', fontSize: 20 }} />
+              ) : (
+                <FavoriteBorderOutlinedIcon sx={{ fontSize: 20 }} />
+              )}
+            </motion.div>
           </IconButton>
-          <Typography component="span" sx={{ fontSize: 13.5 }}>
-            {props.commentCount}
+          <Typography component="span" sx={{ mr: 1, fontSize: 13.5 }}>
+            {likeCount}
           </Typography>
-        </Link>
+
+          <Link
+            href={`/posts/${props.id}/comments`}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <IconButton sx={{ width: 25 }}>
+              <ChatBubbleOutlineIcon sx={{ fontSize: 18.5 }} />
+            </IconButton>
+            <Typography component="span" sx={{ fontSize: 13.5 }}>
+              {props.commentCount}
+            </Typography>
+          </Link>
+        </Box>
+        <Box sx={{ mt: 0.5, mr: 0.7 }}>
+          <FacebookShareButton
+            title={props.content}
+            url={shareUrl}
+            style={buttonStyle}
+          >
+            <FacebookIcon size={25} round />
+          </FacebookShareButton>
+          <TwitterShareButton
+            title={props.content}
+            url={shareUrl}
+            style={buttonStyle}
+          >
+            <XIcon size={25} round />
+          </TwitterShareButton>
+          <LineShareButton
+            title={props.content}
+            url={shareUrl}
+            style={{ borderRadius: '50%' }}
+          >
+            <LineIcon size={25} round />
+          </LineShareButton>
+        </Box>
       </Box>
-      <Box sx={{ mt: 0.5, mr: 0.7 }}>
-        <FacebookShareButton
-          title={props.content}
-          url={shareUrl}
-          style={buttonStyle}
-        >
-          <FacebookIcon size={25} round />
-        </FacebookShareButton>
-        <TwitterShareButton
-          title={props.content}
-          url={shareUrl}
-          style={buttonStyle}
-        >
-          <XIcon size={25} round />
-        </TwitterShareButton>
-        <LineShareButton
-          title={props.content}
-          url={shareUrl}
-          style={{ borderRadius: '50%' }}
-        >
-          <LineIcon size={25} round />
-        </LineShareButton>
-      </Box>
-    </Box>
+      <LoginModal open={open} handleClose={handleClose} />
+    </>
   )
 }
 
