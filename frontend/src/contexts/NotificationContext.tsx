@@ -60,7 +60,7 @@ const NotificationProvider = ({ children }: NotificationProviderProps) => {
           <Snackbar
             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             open={open}
-            autoHideDuration={8000}
+            autoHideDuration={2000}
             onClose={handleClose}
             sx={{
               left: { lg: '61%' },
